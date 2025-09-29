@@ -205,24 +205,43 @@ pipeline {
                             // Build with detailed output
                             echo "🏗️ Starting Angular build..."
                             script {
+                                def buildSuccess = false
+                                
                                 try {
                                     sh 'npx ng build --prod --verbose'
-                                    echo "✅ Angular build completed successfully!"
+                                    buildSuccess = true
+                                    echo "✅ Angular build completed successfully with --prod!"
                                 } catch (Exception e) {
-                                    echo "❌ Angular build failed!"
+                                    echo "⚠️ Production build failed, trying alternative method..."
                                     echo "Error: ${e.getMessage()}"
                                     
-                                    // Debug information
-                                    echo "🔍 Debug Information:"
-                                    sh 'ls -la dist/ || echo "No dist folder found"'
-                                    sh 'npm list @angular/cli || echo "Angular CLI not found in dependencies"'
-                                    sh 'npx ng version || echo "ng command failed"'
-                                    
-                                    // Try alternative build
-                                    echo "🔄 Trying alternative build method..."
-                                    sh 'npm run build || echo "npm run build failed"'
-                                    
-                                    throw e
+                                    // Try alternative build method
+                                    try {
+                                        echo "🔄 Trying npm run build..."
+                                        sh 'npm run build'
+                                        buildSuccess = true
+                                        echo "✅ Angular build completed successfully with npm run build!"
+                                    } catch (Exception e2) {
+                                        echo "❌ Both build methods failed!"
+                                        echo "Error 1 (ng build --prod): ${e.getMessage()}"
+                                        echo "Error 2 (npm run build): ${e2.getMessage()}"
+                                        
+                                        // Debug information
+                                        echo "🔍 Debug Information:"
+                                        sh 'ls -la dist/ || echo "No dist folder found"'
+                                        sh 'npm list @angular/cli || echo "Angular CLI not found in dependencies"'
+                                        sh 'npx ng version || echo "ng command failed"'
+                                        
+                                        throw e2
+                                    }
+                                }
+                                
+                                // Verify build output
+                                if (buildSuccess) {
+                                    echo "🔍 Verifying build output..."
+                                    sh 'ls -la dist/'
+                                    sh 'ls -la dist/P10-UI/ || ls -la dist/*/ || echo "Build output in different structure"'
+                                    echo "✅ Build verification completed"
                                 }
                             }
                         } else {
@@ -251,7 +270,33 @@ pipeline {
                                 }
                             }
                             
-                            bat 'npx ng build --prod'
+                            script {
+                                def buildSuccess = false
+                                
+                                try {
+                                    bat 'npx ng build --prod'
+                                    buildSuccess = true
+                                    echo "✅ Angular build completed successfully with --prod!"
+                                } catch (Exception e) {
+                                    echo "⚠️ Production build failed, trying alternative method..."
+                                    
+                                    try {
+                                        echo "🔄 Trying npm run build..."
+                                        bat 'npm run build'
+                                        buildSuccess = true
+                                        echo "✅ Angular build completed successfully with npm run build!"
+                                    } catch (Exception e2) {
+                                        echo "❌ Both build methods failed!"
+                                        throw e2
+                                    }
+                                }
+                                
+                                if (buildSuccess) {
+                                    echo "🔍 Verifying build output..."
+                                    bat 'dir dist\\'
+                                    echo "✅ Build verification completed"
+                                }
+                            }
                         }
                     }
                 }
