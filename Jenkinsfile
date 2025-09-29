@@ -12,6 +12,11 @@ pipeline {
         FRONTEND_PATH = 'Project_10_adv/ORSProject10-UI'
         JAR_OUTPUT = '/opt/ors-project/ors10.jar'
         DEPLOY_DIR = '/opt/ors-project'
+        
+        // Cache directories
+        MAVEN_CACHE = '/var/lib/jenkins/.m2'
+        NPM_CACHE = '/var/lib/jenkins/.npm'
+        NODE_MODULES_CACHE = '/var/lib/jenkins/cache/node_modules'
     }
 
     stages {
@@ -51,17 +56,34 @@ pipeline {
             }
         }
 
+        stage('Setup Maven Cache') {
+            steps {
+                echo "📦 Setting up Maven dependency cache..."
+                script {
+                    if (isUnix()) {
+                        sh "mkdir -p ${MAVEN_CACHE}"
+                        sh "mkdir -p ${DEPLOY_DIR}/cache/maven"
+                    } else {
+                        bat "if not exist \"C:\\jenkins-cache\\.m2\" mkdir \"C:\\jenkins-cache\\.m2\""
+                        bat "if not exist \"C:\\opt\\ors-project\\cache\\maven\" mkdir \"C:\\opt\\ors-project\\cache\\maven\""
+                    }
+                }
+                echo "✅ Maven cache setup completed"
+            }
+        }
+
         stage('Build Backend') {
             steps {
-                echo "🏗️ Building Spring Boot backend..."
+                echo "🏗️ Building Spring Boot backend with cache..."
                 dir("${BACKEND_PATH}") {
                     script {
                         if (isUnix()) {
-                            sh 'mvn clean compile -DskipTests'
-                            sh 'mvn package -DskipTests -Pprod'
+                            // Use Maven with local repository cache
+                            sh "mvn clean compile -DskipTests -Dmaven.repo.local=${MAVEN_CACHE}/repository"
+                            sh "mvn package -DskipTests -Pprod -Dmaven.repo.local=${MAVEN_CACHE}/repository"
                         } else {
-                            bat 'mvn clean compile -DskipTests'
-                            bat 'mvn package -DskipTests -Pprod'
+                            bat "mvn clean compile -DskipTests -Dmaven.repo.local=C:\\jenkins-cache\\.m2\\repository"
+                            bat "mvn package -DskipTests -Pprod -Dmaven.repo.local=C:\\jenkins-cache\\.m2\\repository"
                         }
                     }
                 }
@@ -69,17 +91,86 @@ pipeline {
             }
         }
 
+        stage('Setup NPM Cache') {
+            steps {
+                echo "📦 Setting up NPM dependency cache..."
+                script {
+                    if (isUnix()) {
+                        sh "mkdir -p ${NPM_CACHE}"
+                        sh "mkdir -p ${NODE_MODULES_CACHE}"
+                        sh "mkdir -p ${DEPLOY_DIR}/cache/npm"
+                    } else {
+                        bat "if not exist \"C:\\jenkins-cache\\.npm\" mkdir \"C:\\jenkins-cache\\.npm\""
+                        bat "if not exist \"C:\\jenkins-cache\\node_modules\" mkdir \"C:\\jenkins-cache\\node_modules\""
+                        bat "if not exist \"C:\\opt\\ors-project\\cache\\npm\" mkdir \"C:\\opt\\ors-project\\cache\\npm\""
+                    }
+                }
+                echo "✅ NPM cache setup completed"
+            }
+        }
+
         stage('Build Frontend') {
             steps {
-                echo "🎨 Building Angular frontend..."
+                echo "🎨 Building Angular frontend with cache..."
                 dir("${FRONTEND_PATH}") {
                     script {
                         if (isUnix()) {
-                            sh 'npm ci --only=production'
-                            sh 'npx ng build --configuration production'
+                            // Check if cached node_modules exists
+                            def nodeModulesExists = sh(script: "test -d ${NODE_MODULES_CACHE}/node_modules", returnStatus: true) == 0
+                            def packageChanged = sh(script: "test package.json -nt ${NODE_MODULES_CACHE}/package.json.timestamp", returnStatus: true) == 0
+                            
+                            if (!nodeModulesExists || packageChanged) {
+                                echo "📥 Installing dependencies (cache miss or package.json changed)..."
+                                sh "npm config set cache ${NPM_CACHE}"
+                                
+                                // Try with legacy peer deps first
+                                script {
+                                    try {
+                                        sh 'npm install --legacy-peer-deps --no-audit --no-fund'
+                                    } catch (Exception e) {
+                                        echo "⚠️ Legacy peer deps failed, trying with force..."
+                                        sh 'npm install --force --no-audit --no-fund'
+                                    }
+                                }
+                                
+                                // Cache the node_modules
+                                sh "rm -rf ${NODE_MODULES_CACHE}/node_modules"
+                                sh "cp -r node_modules ${NODE_MODULES_CACHE}/"
+                                sh "cp package.json ${NODE_MODULES_CACHE}/package.json.timestamp"
+                                echo "💾 Dependencies cached for future builds"
+                            } else {
+                                echo "🚀 Using cached dependencies (faster build)..."
+                                sh "cp -r ${NODE_MODULES_CACHE}/node_modules ."
+                            }
+                            
+                            sh 'npx ng build --prod'
                         } else {
-                            bat 'npm ci --only=production'
-                            bat 'npx ng build --configuration production'
+                            // Windows caching logic
+                            script {
+                                def cacheExists = bat(script: "if exist \"C:\\jenkins-cache\\node_modules\\node_modules\" (exit 0) else (exit 1)", returnStatus: true) == 0
+                                
+                                if (!cacheExists) {
+                                    echo "📥 Installing dependencies (cache miss)..."
+                                    bat "npm config set cache C:\\jenkins-cache\\.npm"
+                                    
+                                    try {
+                                        bat 'npm install --legacy-peer-deps --no-audit --no-fund'
+                                    } catch (Exception e) {
+                                        echo "⚠️ Legacy peer deps failed, trying with force..."
+                                        bat 'npm install --force --no-audit --no-fund'
+                                    }
+                                    
+                                    // Cache the node_modules
+                                    bat "if exist \"C:\\jenkins-cache\\node_modules\\node_modules\" rmdir /s /q \"C:\\jenkins-cache\\node_modules\\node_modules\""
+                                    bat "xcopy node_modules \"C:\\jenkins-cache\\node_modules\\node_modules\\\" /E /I /Y"
+                                    echo "💾 Dependencies cached for future builds"
+                                } else {
+                                    echo "🚀 Using cached dependencies (faster build)..."
+                                    bat "xcopy \"C:\\jenkins-cache\\node_modules\\node_modules\\*\" node_modules\\ /E /Y"
+                                }
+                            }
+                            
+                            bat 'npx ng build --prod'
                         }
                     }
                 }
@@ -197,11 +288,49 @@ pipeline {
     post {
         always {
             echo "🧹 Cleaning up workspace..."
-            cleanWs()
+            script {
+                // Clean workspace but preserve caches
+                cleanWs(patterns: [[pattern: '.git/**', type: 'EXCLUDE'],
+                                 [pattern: 'cache/**', type: 'EXCLUDE']])
+                
+                // Cache maintenance - keep only recent caches
+                if (isUnix()) {
+                    sh """
+                        echo "📊 Cache Statistics:"
+                        echo "Maven cache size: \$(du -sh ${MAVEN_CACHE} 2>/dev/null || echo 'Not found')"
+                        echo "NPM cache size: \$(du -sh ${NPM_CACHE} 2>/dev/null || echo 'Not found')"
+                        echo "Node modules cache size: \$(du -sh ${NODE_MODULES_CACHE} 2>/dev/null || echo 'Not found')"
+                        
+                        # Clean old cache files (older than 7 days)
+                        find ${MAVEN_CACHE} -type f -mtime +7 -delete 2>/dev/null || true
+                        find ${NPM_CACHE} -type f -mtime +7 -delete 2>/dev/null || true
+                    """
+                } else {
+                    bat """
+                        echo 📊 Cache Statistics:
+                        if exist "C:\\jenkins-cache\\.m2" (
+                            echo Maven cache exists
+                        ) else (
+                            echo Maven cache not found
+                        )
+                        if exist "C:\\jenkins-cache\\.npm" (
+                            echo NPM cache exists
+                        ) else (
+                            echo NPM cache not found
+                        )
+                        if exist "C:\\jenkins-cache\\node_modules" (
+                            echo Node modules cache exists
+                        ) else (
+                            echo Node modules cache not found
+                        )
+                    """
+                }
+            }
         }
         success {
             echo "🎉 Pipeline executed successfully!"
             echo "✅ Application deployed and ready for use"
+            echo "💾 Dependencies cached for faster future builds"
             
             // Send notification (if configured)
             // emailext (
