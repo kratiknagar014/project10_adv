@@ -8,8 +8,8 @@ pipeline {
     }
 
     environment {
-        BACKEND_PATH = 'projectORS'
-        FRONTEND_PATH = 'ORSProject10-UI'
+        BACKEND_PATH = 'Project_10_adv/projectORS'
+        FRONTEND_PATH = 'Project_10_adv/ORSProject10-UI'
         JAR_OUTPUT = '/opt/ors-project/ors10.jar'
         DEPLOY_DIR = '/opt/ors-project'
     }
@@ -32,11 +32,19 @@ pipeline {
                         sh 'mvn -version'
                         sh 'node --version'
                         sh 'npm --version'
+                        
+                        // Verify project structure
+                        sh "ls -la ${BACKEND_PATH}/pom.xml"
+                        sh "ls -la ${FRONTEND_PATH}/package.json"
                     } else {
                         bat 'java -version'
                         bat 'mvn -version'
                         bat 'node --version'
                         bat 'npm --version'
+                        
+                        // Verify project structure
+                        bat "dir \"${BACKEND_PATH}\\pom.xml\""
+                        bat "dir \"${FRONTEND_PATH}\\package.json\""
                     }
                 }
                 echo "✅ Environment validation completed"
