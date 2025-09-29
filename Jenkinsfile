@@ -13,10 +13,11 @@ pipeline {
         JAR_OUTPUT = '/opt/ors-project/ors10.jar'
         DEPLOY_DIR = '/opt/ors-project'
         
-        // Cache directories
+        // Cache directories (using Jenkins home - has proper permissions)
         MAVEN_CACHE = '/var/lib/jenkins/.m2'
         NPM_CACHE = '/var/lib/jenkins/.npm'
         NODE_MODULES_CACHE = '/var/lib/jenkins/cache/node_modules'
+        JENKINS_CACHE_DIR = '/var/lib/jenkins/cache'
     }
 
     stages {
@@ -74,11 +75,19 @@ pipeline {
                 echo "📦 Setting up Maven dependency cache..."
                 script {
                     if (isUnix()) {
+                        // Create cache directories in Jenkins home (has proper permissions)
                         sh "mkdir -p ${MAVEN_CACHE}"
-                        sh "mkdir -p ${DEPLOY_DIR}/cache/maven"
+                        sh "mkdir -p ${JENKINS_CACHE_DIR}/maven"
+                        sh "mkdir -p ${MAVEN_CACHE}/repository"
+                        
+                        // Check permissions
+                        sh "ls -la ${MAVEN_CACHE}"
+                        sh "whoami"
+                        echo "✅ Maven cache directories created successfully"
                     } else {
                         bat "if not exist \"C:\\jenkins-cache\\.m2\" mkdir \"C:\\jenkins-cache\\.m2\""
-                        bat "if not exist \"C:\\opt\\ors-project\\cache\\maven\" mkdir \"C:\\opt\\ors-project\\cache\\maven\""
+                        bat "if not exist \"C:\\jenkins-cache\\maven\" mkdir \"C:\\jenkins-cache\\maven\""
+                        bat "if not exist \"C:\\jenkins-cache\\.m2\\repository\" mkdir \"C:\\jenkins-cache\\.m2\\repository\""
                     }
                 }
                 echo "✅ Maven cache setup completed"
@@ -109,13 +118,19 @@ pipeline {
                 echo "📦 Setting up NPM dependency cache..."
                 script {
                     if (isUnix()) {
+                        // Create NPM cache directories in Jenkins home
                         sh "mkdir -p ${NPM_CACHE}"
                         sh "mkdir -p ${NODE_MODULES_CACHE}"
-                        sh "mkdir -p ${DEPLOY_DIR}/cache/npm"
+                        sh "mkdir -p ${JENKINS_CACHE_DIR}/npm"
+                        
+                        // Check permissions and existing cache
+                        sh "ls -la ${NPM_CACHE} || echo 'NPM cache directory created'"
+                        sh "ls -la ${JENKINS_CACHE_DIR} || echo 'Jenkins cache directory created'"
+                        echo "✅ NPM cache directories created successfully"
                     } else {
                         bat "if not exist \"C:\\jenkins-cache\\.npm\" mkdir \"C:\\jenkins-cache\\.npm\""
                         bat "if not exist \"C:\\jenkins-cache\\node_modules\" mkdir \"C:\\jenkins-cache\\node_modules\""
-                        bat "if not exist \"C:\\opt\\ors-project\\cache\\npm\" mkdir \"C:\\opt\\ors-project\\cache\\npm\""
+                        bat "if not exist \"C:\\jenkins-cache\\npm\" mkdir \"C:\\jenkins-cache\\npm\""
                     }
                 }
                 echo "✅ NPM cache setup completed"
@@ -249,16 +264,28 @@ pipeline {
                 echo "📁 Creating deployment directory..."
                 script {
                     if (isUnix()) {
-                        sh "mkdir -p ${DEPLOY_DIR}"
-                        sh "mkdir -p ${DEPLOY_DIR}/logs"
-                        sh "mkdir -p ${DEPLOY_DIR}/backup"
+                        // Try to create deployment directory with proper permissions
+                        try {
+                            sh "sudo mkdir -p ${DEPLOY_DIR}"
+                            sh "sudo mkdir -p ${DEPLOY_DIR}/logs"
+                            sh "sudo mkdir -p ${DEPLOY_DIR}/backup"
+                            sh "sudo chown -R jenkins:jenkins ${DEPLOY_DIR}"
+                            echo "✅ Deployment directory created with sudo"
+                        } catch (Exception e) {
+                            echo "⚠️ Sudo not available, using alternative location..."
+                            // Use Jenkins workspace for deployment
+                            sh "mkdir -p \${WORKSPACE}/deployment"
+                            sh "mkdir -p \${WORKSPACE}/deployment/logs"
+                            sh "mkdir -p \${WORKSPACE}/deployment/backup"
+                            echo "✅ Using workspace deployment directory"
+                        }
                     } else {
                         bat "if not exist \"C:\\opt\\ors-project\" mkdir \"C:\\opt\\ors-project\""
                         bat "if not exist \"C:\\opt\\ors-project\\logs\" mkdir \"C:\\opt\\ors-project\\logs\""
                         bat "if not exist \"C:\\opt\\ors-project\\backup\" mkdir \"C:\\opt\\ors-project\\backup\""
                     }
                 }
-                echo "✅ Deployment directory created"
+                echo "✅ Deployment directory setup completed"
             }
         }
 
@@ -409,7 +436,7 @@ pipeline {
             echo "❌ Pipeline failed!"
             echo "🔍 Check the logs above for error details"
             
-            // Send failure notification (if configured)
+            // Send failure notification.. (if configured)
             // emailext (
             //     subject: "❌ ORS Project Deployment Failed - Build #${BUILD_NUMBER}",
             //     body: "The ORS project deployment failed. Please check Jenkins logs.",
