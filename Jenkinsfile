@@ -39,8 +39,19 @@ pipeline {
                         sh 'npm --version'
                         
                         // Verify project structure
-                        sh "ls -la ${BACKEND_PATH}/pom.xml"
-                        sh "ls -la ${FRONTEND_PATH}/package.json"
+                        echo "📁 Checking project structure..."
+                        sh "ls -la ${BACKEND_PATH}/"
+                        sh "ls -la ${FRONTEND_PATH}/"
+                        
+                        // Verify key files exist
+                        sh "test -f ${BACKEND_PATH}/pom.xml && echo '✅ Backend pom.xml found' || echo '❌ Backend pom.xml missing'"
+                        sh "test -f ${FRONTEND_PATH}/package.json && echo '✅ Frontend package.json found' || echo '❌ Frontend package.json missing'"
+                        sh "test -f ${FRONTEND_PATH}/angular.json && echo '✅ Angular config found' || echo '❌ Angular config missing'"
+                        
+                        // Check workspace permissions
+                        sh "whoami"
+                        sh "pwd"
+                        sh "ls -la"
                     } else {
                         bat 'java -version'
                         bat 'mvn -version'
@@ -48,6 +59,8 @@ pipeline {
                         bat 'npm --version'
                         
                         // Verify project structure
+                        bat "dir \"${BACKEND_PATH}\""
+                        bat "dir \"${FRONTEND_PATH}\""
                         bat "dir \"${BACKEND_PATH}\\pom.xml\""
                         bat "dir \"${FRONTEND_PATH}\\package.json\""
                     }
@@ -113,6 +126,18 @@ pipeline {
             steps {
                 echo "🎨 Building Angular frontend with cache..."
                 dir("${FRONTEND_PATH}") {
+                    // Debug: Check current directory and files
+                    script {
+                        if (isUnix()) {
+                            sh 'pwd'
+                            sh 'ls -la'
+                            sh 'cat package.json | head -20'
+                        } else {
+                            bat 'cd'
+                            bat 'dir'
+                            bat 'type package.json'
+                        }
+                    }
                     script {
                         if (isUnix()) {
                             // Check if cached node_modules exists
@@ -126,12 +151,27 @@ pipeline {
                                 // Try with legacy peer deps first
                                 script {
                                     try {
-                                        sh 'npm install --legacy-peer-deps --no-audit --no-fund'
+                                        echo "🔄 Attempting npm install with --legacy-peer-deps..."
+                                        sh 'npm install --legacy-peer-deps --no-audit --no-fund --verbose'
                                     } catch (Exception e) {
-                                        echo "⚠️ Legacy peer deps failed, trying with force..."
-                                        sh 'npm install --force --no-audit --no-fund'
+                                        echo "⚠️ Legacy peer deps failed: ${e.getMessage()}"
+                                        echo "🔄 Trying with --force flag..."
+                                        try {
+                                            sh 'npm install --force --no-audit --no-fund --verbose'
+                                        } catch (Exception e2) {
+                                            echo "❌ Both install methods failed!"
+                                            echo "Error 1 (legacy-peer-deps): ${e.getMessage()}"
+                                            echo "Error 2 (force): ${e2.getMessage()}"
+                                            
+                                            // Try basic install as last resort
+                                            echo "🔄 Trying basic npm install..."
+                                            sh 'npm install --no-audit --no-fund'
+                                        }
                                     }
                                 }
+                                
+                                // Verify node_modules was created
+                                sh 'ls -la node_modules/ | head -10'
                                 
                                 // Cache the node_modules
                                 sh "rm -rf ${NODE_MODULES_CACHE}/node_modules"
@@ -141,9 +181,35 @@ pipeline {
                             } else {
                                 echo "🚀 Using cached dependencies (faster build)..."
                                 sh "cp -r ${NODE_MODULES_CACHE}/node_modules ."
+                                sh 'ls -la node_modules/ | head -5'
                             }
                             
-                            sh 'npx ng build --prod'
+                            // Verify Angular CLI is available
+                            sh 'npx ng version || echo "Angular CLI not found, installing..."'
+                            
+                            // Build with detailed output
+                            echo "🏗️ Starting Angular build..."
+                            script {
+                                try {
+                                    sh 'npx ng build --prod --verbose'
+                                    echo "✅ Angular build completed successfully!"
+                                } catch (Exception e) {
+                                    echo "❌ Angular build failed!"
+                                    echo "Error: ${e.getMessage()}"
+                                    
+                                    // Debug information
+                                    echo "🔍 Debug Information:"
+                                    sh 'ls -la dist/ || echo "No dist folder found"'
+                                    sh 'npm list @angular/cli || echo "Angular CLI not found in dependencies"'
+                                    sh 'npx ng version || echo "ng command failed"'
+                                    
+                                    // Try alternative build
+                                    echo "🔄 Trying alternative build method..."
+                                    sh 'npm run build || echo "npm run build failed"'
+                                    
+                                    throw e
+                                }
+                            }
                         } else {
                             // Windows caching logic
                             script {
