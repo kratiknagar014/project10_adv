@@ -40,6 +40,7 @@ export class HttpServiceService {
 
   isLogout() {
     let JSESSIONID = localStorage.getItem('fname');
+    let token = localStorage.getItem('token');
     console.log("isLogout check...");
 
     // Don't check session for public pages or first visit
@@ -50,15 +51,21 @@ export class HttpServiceService {
       return false; // Don't show session expired for public pages
     }
 
-    if (JSESSIONID == "null" || JSESSIONID == null) {
-      this.form.message = "Your Session has been Expired! Please Re-Login";
-      this.form.error = true;
-      this.userparams.url = this.router.url;// to navigate the URI request.
-      this.router.navigateByUrl("/login");
-      console.log("Session expired, redirecting to login");
-
-      return true;
+    // Check both fname and token for session validity
+    if ((JSESSIONID == "null" || JSESSIONID == null) && (token == "null" || token == null)) {
+      // Only show session expired if user was previously logged in
+      if (localStorage.getItem('wasLoggedIn') === 'true') {
+        this.form.message = "Your Session has been Expired! Please Re-Login";
+        this.form.error = true;
+        this.userparams.url = this.router.url;
+        localStorage.removeItem('wasLoggedIn'); // Clear flag to prevent repeated alerts
+        this.router.navigateByUrl("/login");
+        console.log("Session expired, redirecting to login");
+        return true;
+      }
+      return false; // Don't show alert on first visit
     } else {
+      localStorage.setItem('wasLoggedIn', 'true'); // Mark user as logged in
       return false;
     }
   }
@@ -95,13 +102,19 @@ export class HttpServiceService {
   }
 
   /**
-   * Handle HTTP errors - especially 401/403
+   * Handle HTTP errors - but don't auto-logout for all 403s
    */
   private handleHttpError(error: any, callback: any) {
-    console.log('Handling HTTP Error:', error);
+    console.log('HTTP Error Status:', error.status);
+    console.log('HTTP Error Message:', error.message);
     
-    if (error.status === 401 || error.status === 403) {
-      console.log('Authentication error detected in HttpService');
+    // Only logout for specific authentication endpoints, not all 403s
+    const authEndpoints = ['/Login', '/Auth', '/logout'];
+    const isAuthEndpoint = authEndpoints.some(endpoint => error.url && error.url.includes(endpoint));
+    
+    if (error.status === 401 || (error.status === 403 && isAuthEndpoint)) {
+      console.log('403 Forbidden - Access denied');
+      console.log('Authentication error - logging out user');
       
       // Clear authentication data
       localStorage.removeItem('token');
@@ -111,6 +124,7 @@ export class HttpServiceService {
       localStorage.removeItem('fname');
       localStorage.removeItem('lname');
       localStorage.removeItem('userid');
+      console.log('Authentication data cleared');
       
       // Show error message
       this.form.message = "Your session has expired. Please login again.";
@@ -129,12 +143,13 @@ export class HttpServiceService {
         });
       }
     } else {
-      // Handle other errors
+      // Handle other errors without logging out
+      console.log('Non-auth error, not logging out user');
       if (callback) {
         callback({
           success: false,
           result: {
-            message: error.message || "An error occurred. Please try again."
+            message: error.status === 403 ? "Access denied" : (error.message || "An error occurred. Please try again.")
           }
         });
       }

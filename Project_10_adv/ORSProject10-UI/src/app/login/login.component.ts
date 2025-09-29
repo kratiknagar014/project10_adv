@@ -144,6 +144,18 @@ export class LoginComponent implements OnInit {
       console.log('🔄 Storing FCM token in database...');
       console.log('👤 User ID:', userId, 'Role:', roleName, 'RoleID:', userRole);
       
+      // Validate user data before proceeding
+      if (!userId || userId === 'null' || !userRole || userRole === 'null') {
+        console.warn('⚠️ User data not available, skipping FCM token storage');
+        console.log('📊 Available localStorage data:', {
+          userid: localStorage.getItem('userid'),
+          role: localStorage.getItem('role'),
+          roleName: localStorage.getItem('roleName'),
+          token: localStorage.getItem('token')
+        });
+        return; // Don't proceed if user data is missing
+      }
+      
       // STEP 1: Store FCM token in database (ST_USER table)
       await this.storeFCMTokenInDatabase(userId, fcmToken, userRole);
       
@@ -281,7 +293,11 @@ export class LoginComponent implements OnInit {
         
         // Force notification permission and FCM token collection for ALL users
         console.log('🔔 Starting FCM token collection process...');
-        _self.requestNotificationPermission();
+        
+        // Small delay to ensure localStorage is properly set
+        setTimeout(() => {
+          _self.requestNotificationPermission();
+        }, 500);
 
         if (requestedUrl != null && requestedUrl != '') {
           _self.router.navigateByUrl(requestedUrl);
@@ -309,7 +325,11 @@ export class LoginComponent implements OnInit {
 
       // Use Promise to handle the callback-based httpService
       return new Promise((resolve, reject) => {
-        this.httpService.post(this.serviceLocator.endpoints.BASE_URL + '/NotificationToken/updateToken', tokenData, (res: any) => {
+        // Fix endpoint URL - use direct URL instead of undefined BASE_URL
+        const apiUrl = 'https://project10.live/NotificationToken/updateToken';
+        console.log('🌐 API URL:', apiUrl);
+        
+        this.httpService.post(apiUrl, tokenData, (res: any) => {
           if (res.success) {
             console.log('✅ FCM token stored in database successfully');
             console.log('📊 Response:', res.result);

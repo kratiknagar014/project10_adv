@@ -1,3 +1,38 @@
 {
-    "java.configuration.updateBuildConfiguration": "interactive"
+    "java.configuration.updateBuildConfiguration": "interactive",
+    "files.exclude": {
+        "**/node_modules": true,
+        "**/target": true,
+        "**/dist": true,
+        "**/.angular": true,
+        "**/.git": true,
+        "**/.DS_Store": true,
+        "**/Thumbs.db": true,
+        "**/*.log": true
+    },
+    "search.exclude": {
+        "**/node_modules": true,
+        "**/target": true,
+        "**/dist": true,
+        "**/.angular": true,
+        "**/coverage": true
+    },
+    "typescript.preferences.importModuleSpecifier": "relative",
+    "java.compile.nullAnalysis.mode": "automatic",
+    "java.configuration.runtimes": [
+        {
+            "name": "JavaSE-11",
+            "path": "C:\\Program Files\\Java\\jdk-11.0.2"
+        }
+    ],
+    "maven.executable.path": "mvn",
+    "files.associations": {
+        "*.properties": "properties",
+        "*.yml": "yaml",
+        "*.yaml": "yaml"
+    },
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+        "source.organizeImports": true
+    }
 }
