@@ -1,0 +1,227 @@
+/* Dark theme for signup form */
+.alertRedColor {
+    color: #ff6b6b;
+}
+
+.required-field::after { 		
+  content: "*";		
+  color: #ff6b3d;		
+}	
+
+.successColor{
+    color: #28a745;
+}
+
+.btn-space {
+    margin-right: 5px;
+}
+
+/* Dark theme card styling */
+.signup-card {
+    position: relative;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #1b1f24 0%, #1a1c20 60%, #2c1f1a 100%);
+    border: 1px solid rgba(255, 107, 61, 0.28);
+    box-shadow:
+        0 14px 36px rgba(0, 0, 0, 0.42),
+        0 6px 16px rgba(0, 0, 0, 0.28),
+        0 0 0 2px rgba(255, 107, 61, 0.18),
+        0 0 48px rgba(255, 107, 61, 0.35);
+    width: 100%;
+    max-width: 480px;
+    margin: 0 auto;
+}
+
+.card {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+.signup-card .card-body {
+    padding: 1rem;
+}
+
+@media (max-width: 768px) {
+    .card {
+        max-width: 95%;
+        margin: 10px auto;
+    }
+    .card-body {
+        padding: 1rem !important;
+    }
+}
+
+/* Signup page layout matching login */
+.signup-page {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: calc(100vh - 80px);
+    background: linear-gradient(135deg, #0f1115 0%, #1a1c20 50%, #2c1f1a 100%);
+    padding: 10px;
+    margin-top: 80px;
+}
+
+.row {
+    width: 100%;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+}
+
+/* Form control styling */
+.form-control {
+    background: rgba(255, 255, 255, 0.1) !important;
+    border: 1px solid rgba(255, 107, 61, 0.3) !important;
+    color: #ffffff !important;
+    font-weight: 500;
+    padding: 8px 12px !important;
+    font-size: 14px !important;
+    margin-bottom: 0.8rem;
+}
+
+.form-control:focus {
+    background: rgba(255, 255, 255, 0.15) !important;
+    border-color: #ff6b3d !important;
+    box-shadow: 0 0 0 0.2rem rgba(255, 107, 61, 0.25) !important;
+    color: #ffffff !important;
+}
+
+.form-control::placeholder {
+    color: rgba(255, 255, 255, 0.6) !important;
+}
+
+/* Select styling */
+.form-select {
+    background: rgba(255, 255, 255, 0.1) !important;
+    border: 1px solid rgba(255, 107, 61, 0.3) !important;
+    color: #ffffff !important;
+}
+
+.form-select:focus {
+    background: rgba(255, 255, 255, 0.15) !important;
+    border-color: #ff6b3d !important;
+    box-shadow: 0 0 0 0.2rem rgba(255, 107, 61, 0.25) !important;
+    color: #ffffff !important;
+}
+
+.form-select option {
+    background: #1b1f24 !important;
+    color: #ffffff !important;
+}
+
+/* Text styling */
+.text-light {
+    color: #ffffff !important;
+}
+
+/* Alert styling */
+.alert-success {
+    background: linear-gradient(135deg, rgba(40, 167, 69, 0.15), rgba(32, 201, 151, 0.15)) !important;
+    border-left: 4px solid #28a745 !important;
+    color: #ffffff !important;
+    border: none !important;
+    border-radius: 8px !important;
+}
+
+.alert-danger {
+    background: linear-gradient(135deg, rgba(220, 53, 69, 0.15), rgba(255, 107, 61, 0.15)) !important;
+    border-left: 4px solid #dc3545 !important;
+    color: #ffffff !important;
+    border: none !important;
+    border-radius: 8px !important;
+}
+
+/* Button styling */
+.btn {
+    font-weight: 600;
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-size: 14px;
+    transition: all 0.2s ease;
+    margin: 2px;
+}
+
+@media (max-width: 576px) {
+    .btn {
+        padding: 6px 12px;
+        font-size: 13px;
+        width: 100%;
+        margin-bottom: 8px;
+    }
+}
+
+.btn-success {
+    background: linear-gradient(135deg, #28a745, #20c997) !important;
+    border: none !important;
+    box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+}
+
+.btn-success:hover {
+    background: linear-gradient(135deg, #218838, #1e7e34) !important;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(40, 167, 69, 0.4);
+}
+
+.btn-warning {
+    background: linear-gradient(135deg, #ffc107, #fd7e14) !important;
+    border: none !important;
+    color: #212529 !important;
+    box-shadow: 0 4px 12px rgba(255, 193, 7, 0.3);
+}
+
+.btn-warning:hover {
+    background: linear-gradient(135deg, #e0a800, #e8590c) !important;
+    color: #212529 !important;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(255, 193, 7, 0.4);
+}
+.file-btn{
+    border: black;
+}
+
+.third {
+    border-color: #b300b3;
+    color: #695d29;
+    box-shadow: 0 0 40px 40px #3498db inset, 0 0 0 0 #3498db;
+    -webkit-transition: all 150ms ease-in-out;
+    transition: all 150ms ease-in-out;
+  }
+  .third:hover {
+    box-shadow: 0 0 10px 0 #3498db inset, 0 0 10px 4px #3498db;
+  }
+  .filebtn {
+    box-sizing: border-box;
+    -webkit-appearance: none;
+       -moz-appearance: none;
+            appearance: none;
+    background-color: transparent;
+    border: 2px solid #e74c3c;
+    border-radius: 0.6em;
+    color: #e74c3c;
+    cursor: pointer;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-align-self: center;
+        -ms-flex-item-align: center;
+            align-self: center;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1;
+    margin: 20px;
+    padding: 1.2em 2.8em;
+    text-decoration: none;
+    text-align: center;
+    text-transform: uppercase;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+  }
+  .filebtn:hover, .filebtn:focus {
+    color: #ffffff;
+    outline: 0;
+  }
+  
+

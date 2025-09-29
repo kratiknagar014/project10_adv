@@ -1,0 +1,471 @@
+<app-navbar></app-navbar>
+
+<style>
+  .modern-container {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #0a0e27 0%, #1a1d3a 25%, #2d1b69 50%, #1a1d3a 75%, #0a0e27 100%);
+    padding: 20px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+
+  .search-card {
+    background: rgba(20, 25, 45, 0.95);
+    border: 2px solid #00d4ff;
+    border-radius: 16px;
+    box-shadow: 
+      0 0 25px rgba(0, 212, 255, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    max-width: 600px;
+    margin: 0 auto 30px auto;
+    padding: 30px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .marksheet-card {
+    background: rgba(20, 25, 45, 0.95);
+    border: 2px solid #00d4ff;
+    border-radius: 16px;
+    box-shadow: 
+      0 0 25px rgba(0, 212, 255, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 30px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .search-card::before, .marksheet-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, transparent 30%, rgba(0, 212, 255, 0.05) 50%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .modern-title {
+    color: #ffffff;
+    font-size: 2.5rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 30px;
+    text-shadow: 0 0 15px rgba(0, 212, 255, 0.5);
+    letter-spacing: 1px;
+  }
+
+  .search-form {
+    display: flex;
+    gap: 15px;
+    align-items: end;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .search-group {
+    flex: 1;
+    min-width: 200px;
+    max-width: 250px;
+  }
+
+  .search-label {
+    color: #ffffff;
+    font-weight: 500;
+    margin-bottom: 8px;
+    display: block;
+    font-size: 0.9rem;
+  }
+
+  .modern-input {
+    width: 100%;
+    padding: 12px 16px;
+    background: rgba(30, 35, 55, 0.8);
+    border: 2px solid rgba(0, 212, 255, 0.3);
+    border-radius: 8px;
+    color: #ffffff;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    outline: none;
+  }
+
+  .modern-input:focus {
+    border-color: #00d4ff;
+    box-shadow: 0 0 15px rgba(0, 212, 255, 0.4);
+    background: rgba(30, 35, 55, 0.95);
+  }
+
+  .modern-input::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+  }
+
+  .btn-modern {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 120px;
+    justify-content: center;
+  }
+
+  .btn-success-modern {
+    background: linear-gradient(135deg, #2ecc71, #27ae60);
+    color: white;
+    box-shadow: 0 3px 12px rgba(46, 204, 113, 0.3);
+  }
+
+  .btn-success-modern:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 16px rgba(46, 204, 113, 0.4);
+  }
+
+  .btn-primary-modern {
+    background: linear-gradient(135deg, #3498db, #2980b9);
+    color: white;
+    box-shadow: 0 3px 12px rgba(52, 152, 219, 0.3);
+  }
+
+  .btn-primary-modern:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 16px rgba(52, 152, 219, 0.4);
+  }
+
+  .btn-modern:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none !important;
+  }
+
+  .alert-modern {
+    padding: 12px 16px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    font-weight: 500;
+    position: relative;
+    border: none;
+    font-size: 0.9rem;
+  }
+
+  .alert-success-modern {
+    background: rgba(46, 204, 113, 0.15);
+    color: #2ecc71;
+    border: 1px solid rgba(46, 204, 113, 0.3);
+  }
+
+  .alert-danger-modern {
+    background: rgba(255, 71, 87, 0.15);
+    color: #ff4757;
+    border: 1px solid rgba(255, 71, 87, 0.3);
+  }
+
+  .close-btn {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: inherit;
+    font-size: 1.1rem;
+    cursor: pointer;
+    opacity: 0.7;
+  }
+
+  .close-btn:hover {
+    opacity: 1;
+  }
+
+  .marksheet-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: rgba(30, 35, 55, 0.6);
+    border: 1px solid rgba(0, 212, 255, 0.2);
+    border-radius: 12px;
+    overflow: hidden;
+    margin-top: 20px;
+  }
+
+  .marksheet-table th {
+    background: rgba(0, 212, 255, 0.1);
+    color: #00d4ff;
+    font-weight: 600;
+    padding: 15px 12px;
+    text-align: center;
+    border: 1px solid rgba(0, 212, 255, 0.2);
+    font-size: 0.9rem;
+  }
+
+  .marksheet-table td {
+    color: #ffffff;
+    padding: 12px;
+    text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    font-size: 0.85rem;
+  }
+
+  .student-info {
+    background: rgba(0, 212, 255, 0.05);
+  }
+
+  .subject-header {
+    background: rgba(0, 212, 255, 0.08);
+    font-weight: 600;
+  }
+
+  .marks-pass {
+    color: #2ecc71;
+    font-weight: bold;
+  }
+
+  .marks-fail {
+    color: #e74c3c;
+    font-weight: bold;
+  }
+
+  .total-row {
+    background: rgba(0, 212, 255, 0.05);
+    font-weight: bold;
+  }
+
+  .grade-pass {
+    color: #2ecc71;
+    font-weight: bold;
+    font-size: 1.1rem;
+  }
+
+  .grade-fail {
+    color: #e74c3c;
+    font-weight: bold;
+    font-size: 1.1rem;
+  }
+
+  .marksheet-title {
+    color: #00d4ff;
+    font-size: 1.5rem;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 20px;
+    text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+  }
+
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .modern-container {
+      padding: 15px;
+    }
+    
+    .search-card, .marksheet-card {
+      padding: 20px;
+      margin: 10px auto;
+    }
+    
+    .modern-title {
+      font-size: 2rem;
+    }
+    
+    .search-form {
+      flex-direction: column;
+      gap: 15px;
+    }
+    
+    .search-group {
+      min-width: 100%;
+      max-width: 100%;
+    }
+    
+    .marksheet-table th,
+    .marksheet-table td {
+      padding: 8px 6px;
+      font-size: 0.8rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .search-card, .marksheet-card {
+      padding: 15px;
+      border-radius: 12px;
+    }
+    
+    .modern-title {
+      font-size: 1.6rem;
+      margin-bottom: 20px;
+    }
+    
+    .btn-modern {
+      padding: 10px 16px;
+      font-size: 0.8rem;
+      width: 100%;
+    }
+    
+    .marksheet-table th,
+    .marksheet-table td {
+      padding: 6px 4px;
+      font-size: 0.75rem;
+    }
+  }
+</style>
+
+<div class="modern-container">
+  <!-- Search Section -->
+  <div class="search-card">
+    <h1 class="modern-title">{{'Get Marksheet' | translate}}</h1>
+    
+    <form name="rollForm" (ngSubmit)="go()">
+      <div class="search-form">
+        <div class="search-group">
+          <label class="search-label">{{'Roll Number' | translate}}</label>
+          <input type="text" name="rollNo" id="rollNo" class="modern-input" 
+                 [(ngModel)]="form.data.rollNo" placeholder="{{'Enter Roll Number' | translate}}">
+        </div>
+        
+        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+          <button type="submit" [disabled]="!validate()" class="btn-modern btn-success-modern">
+            <i class="fa fa-search"></i>
+            {{'Search' | translate}}
+          </button>
+          <a class="btn-modern btn-primary-modern" [routerLink]="['/getmarksheet']">
+            <i class="fa fa-refresh"></i>
+            {{'Reset' | translate}}
+          </a>
+        </div>
+      </div>
+    </form>
+
+    <!-- Success/Error Messages -->
+    <div *ngIf="form.error" class="alert-modern alert-danger-modern">
+      <button type="button" class="close-btn" data-bs-dismiss="alert" aria-label="Close">×</button>
+      {{form.message}}
+    </div>
+
+    <div *ngIf="!form.error && form.message != null" class="alert-modern alert-success-modern">
+      <button type="button" class="close-btn" data-bs-dismiss="alert" aria-label="Close">×</button>
+      {{form.message}}
+    </div>
+  </div>
+
+  <!-- Marksheet Display -->
+  <div class="marksheet-card" *ngIf="form.list && form.list.length > 0 && form.list[0]?.rollNo != null">
+    <h2 class="marksheet-title">{{'Student Marksheet' | translate}}</h2>
+    
+    <table class="marksheet-table">
+      <!-- Student Information -->
+      <tr class="student-info">
+        <th colspan="2">{{'Roll Number' | translate}}</th>
+        <td colspan="3"><strong>{{form.list.rollNo}}</strong></td>
+      </tr>
+      <tr class="student-info">
+        <th colspan="2">{{'Student Name' | translate}}</th>
+        <td colspan="3"><strong>{{form.list.name}}</strong></td>
+      </tr>
+      
+      <!-- Table Headers -->
+      <tr class="subject-header">
+        <th>{{'Subject' | translate}}</th>
+        <th>{{'Max Marks' | translate}}</th>
+        <th>{{'Min Marks' | translate}}</th>
+        <th>{{'Marks Obtained' | translate}}</th>
+        <th>{{'Status' | translate}}</th>
+      </tr>
+      
+      <!-- Physics -->
+      <tr>
+        <th>{{'Physics' | translate}}</th>
+        <td>100</td>
+        <td>35</td>
+        <td>
+          <span [ngClass]="{'marks-pass': form.list.physics > 35, 'marks-fail': form.list.physics <= 35}">
+            {{form.list.physics}}
+          </span>
+        </td>
+        <td>
+          <span [ngClass]="{'marks-pass': form.list.physics > 35, 'marks-fail': form.list.physics <= 35}">
+            {{form.list.physics > 35 ? 'Pass' : 'Fail'}}
+          </span>
+        </td>
+      </tr>
+      
+      <!-- Chemistry -->
+      <tr>
+        <th>{{'Chemistry' | translate}}</th>
+        <td>100</td>
+        <td>35</td>
+        <td>
+          <span [ngClass]="{'marks-pass': form.list.chemistry > 35, 'marks-fail': form.list.chemistry <= 35}">
+            {{form.list.chemistry}}
+          </span>
+        </td>
+        <td>
+          <span [ngClass]="{'marks-pass': form.list.chemistry > 35, 'marks-fail': form.list.chemistry <= 35}">
+            {{form.list.chemistry > 35 ? 'Pass' : 'Fail'}}
+          </span>
+        </td>
+      </tr>
+      
+      <!-- Mathematics -->
+      <tr>
+        <th>{{'Mathematics' | translate}}</th>
+        <td>100</td>
+        <td>35</td>
+        <td>
+          <span [ngClass]="{'marks-pass': form.list.maths > 35, 'marks-fail': form.list.maths <= 35}">
+            {{form.list.maths}}
+          </span>
+        </td>
+        <td>
+          <span [ngClass]="{'marks-pass': form.list.maths > 35, 'marks-fail': form.list.maths <= 35}">
+            {{form.list.maths > 35 ? 'Pass' : 'Fail'}}
+          </span>
+        </td>
+      </tr>
+      
+      <!-- Total -->
+      <tr class="total-row">
+        <th colspan="3">{{'Total Marks' | translate}}</th>
+        <td colspan="2">
+          <strong>{{form.list.maths + form.list.physics + form.list.chemistry}} / 300</strong>
+        </td>
+      </tr>
+      
+      <!-- Percentage -->
+      <tr class="total-row">
+        <th colspan="3">{{'Percentage' | translate}}</th>
+        <td colspan="2">
+          <strong>{{((form.list.physics + form.list.maths + form.list.chemistry) * 100) / 300 | number:'2.0-2'}}%</strong>
+        </td>
+      </tr>
+      
+      <!-- Final Grade -->
+      <tr class="total-row">
+        <th colspan="3">{{'Final Result' | translate}}</th>
+        <td colspan="2" *ngIf="((form.list.physics + form.list.maths + form.list.chemistry) * 100) / 300 > 35 && form.list.physics > 35 && form.list.chemistry > 35 && form.list.maths > 35; else failBlock">
+          <span class="grade-pass">
+            <i class="fa fa-check-circle"></i>
+            {{'PASS' | translate}}
+          </span>
+        </td>
+        <ng-template #failBlock>
+          <td colspan="2" class="total-row">
+            <span class="grade-fail">
+              <i class="fa fa-times-circle"></i>
+              {{'FAIL' | translate}}
+            </span>
+          </td>
+        </ng-template>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<app-footer></app-footer>

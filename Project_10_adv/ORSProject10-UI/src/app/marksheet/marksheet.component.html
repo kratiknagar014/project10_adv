@@ -1,0 +1,368 @@
+<app-navbar></app-navbar>
+
+<style>
+  .modern-container {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #0a0e27 0%, #1a1d3a 25%, #2d1b69 50%, #1a1d3a 75%, #0a0e27 100%);
+    padding: 15px;
+    font-family: 'Poppins', 'Noto Sans Devanagari', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+
+  .modern-card {
+    background: rgba(20, 25, 45, 0.95);
+    border: 2px solid #00d4ff;
+    border-radius: 16px;
+    box-shadow: 
+      0 0 25px rgba(0, 212, 255, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 25px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .modern-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, transparent 30%, rgba(0, 212, 255, 0.05) 50%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .modern-title {
+    color: #ffffff;
+    font-size: 1.8rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 20px;
+    text-shadow: 0 0 15px rgba(0, 212, 255, 0.5);
+    letter-spacing: 1px;
+  }
+
+  .form-row {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 18px;
+    flex-wrap: wrap;
+  }
+
+  .form-group {
+    flex: 1;
+    min-width: 250px;
+  }
+
+  .form-label {
+    color: #ffffff;
+    font-weight: 600;
+    margin-bottom: 6px;
+    display: block;
+    font-size: 0.9rem;
+  }
+
+  .required-asterisk {
+    color: #ff4757;
+    margin-left: 3px;
+  }
+
+  .modern-input-group {
+    position: relative;
+    margin-bottom: 4px;
+  }
+
+  .input-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #00d4ff;
+    font-size: 1rem;
+    z-index: 2;
+  }
+
+  .modern-input, .modern-select {
+    width: 100%;
+    padding: 12px 12px 12px 40px;
+    background: rgba(30, 35, 55, 0.8);
+    border: 2px solid rgba(0, 212, 255, 0.3);
+    border-radius: 10px;
+    color: #ffffff;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    outline: none;
+    box-sizing: border-box;
+  }
+
+  .modern-input:focus, .modern-select:focus {
+    border-color: #00d4ff;
+    box-shadow: 0 0 12px rgba(0, 212, 255, 0.4);
+    background: rgba(30, 35, 55, 0.95);
+  }
+
+  .modern-input::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.85rem;
+  }
+
+  .modern-select option {
+    background: #1e2337;
+    color: #ffffff;
+  }
+
+  .error-message {
+    color: #ff4757;
+    font-size: 0.8rem;
+    margin-top: 3px;
+    display: block;
+  }
+
+  .alert-modern {
+    padding: 12px 16px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    font-weight: 500;
+    position: relative;
+    border: none;
+    font-size: 0.9rem;
+  }
+
+  .alert-success-modern {
+    background: rgba(46, 204, 113, 0.15);
+    color: #2ecc71;
+    border: 1px solid rgba(46, 204, 113, 0.3);
+  }
+
+  .alert-danger-modern {
+    background: rgba(255, 71, 87, 0.15);
+    color: #ff4757;
+    border: 1px solid rgba(255, 71, 87, 0.3);
+  }
+
+  .close-btn {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: inherit;
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 0;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .button-group {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin-top: 25px;
+    flex-wrap: wrap;
+  }
+
+  .btn-modern {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 120px;
+    justify-content: center;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .btn-save {
+    background: linear-gradient(135deg, #2ecc71, #27ae60);
+    color: white;
+    box-shadow: 0 4px 15px rgba(46, 204, 113, 0.3);
+  }
+
+  .btn-save:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(46, 204, 113, 0.4);
+    background: linear-gradient(135deg, #27ae60, #2ecc71);
+  }
+
+  .btn-list {
+    background: linear-gradient(135deg, #f39c12, #e67e22);
+    color: white;
+    box-shadow: 0 4px 15px rgba(243, 156, 18, 0.3);
+  }
+
+  .btn-list:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(243, 156, 18, 0.4);
+    background: linear-gradient(135deg, #e67e22, #f39c12);
+    color: white;
+    text-decoration: none;
+  }
+
+  @media (max-width: 768px) {
+    .modern-container {
+      padding: 10px;
+    }
+    
+    .modern-card {
+      padding: 20px;
+      margin: 0 5px;
+    }
+    
+    .modern-title {
+      font-size: 1.5rem;
+    }
+    
+    .form-row {
+      flex-direction: column;
+      gap: 0;
+    }
+    
+    .form-group {
+      min-width: 100%;
+      margin-bottom: 15px;
+    }
+    
+    .button-group {
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    .btn-modern {
+      width: 100%;
+      max-width: 200px;
+    }
+    
+    .form-label {
+      font-size: 0.85rem;
+    }
+  }
+</style>
+
+<div class="modern-container">
+  <div class="modern-card">
+    <form name="marksheetForm">
+      <h1 *ngIf="!(form.data.id>0)" class="modern-title">ADD MARKSHEET</h1>
+      <h1 *ngIf="form.data.id>0" class="modern-title">UPDATE MARKSHEET</h1>
+
+      <!-- Success Message -->
+      <div *ngIf="!form.error && form.message != null" class="alert-modern alert-success-modern">
+        <button type="button" class="close-btn" data-bs-dismiss="alert" aria-label="Close">×</button>
+        {{form.message}}
+      </div>
+
+      <!-- Error Message -->
+      <div *ngIf="form.error && form.message != null" class="alert-modern alert-danger-modern">
+        <button type="button" class="close-btn" data-bs-dismiss="alert" aria-label="Close">×</button>
+        {{form.message}}
+      </div>
+
+      <!-- Row 1: Roll No and Student -->
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">
+            {{'Roll No' | translate}}
+            <span class="required-asterisk">*</span>
+          </label>
+          <div class="modern-input-group">
+            <i class="fa fa-id-card input-icon"></i>
+            <input type="text" name="rollNo" [(ngModel)]="form.data.rollNo" class="modern-input"
+              placeholder="{{'Enter Roll No' | translate}}">
+          </div>
+          <span class="error-message">{{form.inputerror.rollNo}}</span>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">
+            {{'Student' | translate}}
+            <span class="required-asterisk">*</span>
+          </label>
+          <div class="modern-input-group">
+            <i class="fa fa-user input-icon"></i>
+            <select class="modern-select" name="studentId" [(ngModel)]="form.data.studentId">
+              <option [ngValue]="null" value="">{{'Select Student' | translate}}</option>
+              <option *ngFor="let obj of form.preload.studentList" [value]="obj.id">{{obj.firstName + ' ' + obj.lastName}}</option>
+            </select>
+          </div>
+          <span class="error-message">{{form.inputerror.studentId}}</span>
+        </div>
+      </div>
+
+      <!-- Row 2: Physics and Chemistry -->
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">
+            {{'Physics' | translate}}
+            <span class="required-asterisk">*</span>
+          </label>
+          <div class="modern-input-group">
+            <i class="fa fa-flask input-icon"></i>
+            <input type="number" name="physics" [(ngModel)]="form.data.physics" class="modern-input"
+              placeholder="{{'Enter Physics Marks' | translate}}" min="0" max="100">
+          </div>
+          <span class="error-message">{{form.inputerror.physics}}</span>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">
+            {{'Chemistry' | translate}}
+            <span class="required-asterisk">*</span>
+          </label>
+          <div class="modern-input-group">
+            <i class="fa fa-atom input-icon"></i>
+            <input type="number" name="chemistry" [(ngModel)]="form.data.chemistry" class="modern-input"
+              placeholder="{{'Enter Chemistry Marks' | translate}}" min="0" max="100">
+          </div>
+          <span class="error-message">{{form.inputerror.chemistry}}</span>
+        </div>
+      </div>
+
+      <!-- Row 3: Maths (Full Width) -->
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">
+            {{'Maths' | translate}}
+            <span class="required-asterisk">*</span>
+          </label>
+          <div class="modern-input-group">
+            <i class="fa fa-calculator input-icon"></i>
+            <input type="number" name="maths" [(ngModel)]="form.data.maths" class="modern-input"
+              placeholder="{{'Enter Maths Marks' | translate}}" min="0" max="100">
+          </div>
+          <span class="error-message">{{form.inputerror.maths}}</span>
+        </div>
+      </div>
+
+      <!-- Buttons -->
+      <div class="button-group">
+        <button *ngIf="!(form.data.id>0)" (click)="submit()" class="btn-modern btn-save" type="button">
+          <i class="fa fa-save"></i>
+          {{'Save' | translate}}
+        </button>
+        <button *ngIf="form.data.id>0" (click)="submit()" class="btn-modern btn-save" type="button">
+          <i class="fa fa-edit"></i>
+          {{'Update' | translate}}
+        </button>
+        <a class="btn-modern btn-list" [routerLink]="['/marksheetlist']">
+          <i class="fa fa-list"></i>
+          {{'List' | translate}}
+        </a>
+      </div>
+    </form>
+  </div>
+</div>
+
+<app-footer></app-footer>

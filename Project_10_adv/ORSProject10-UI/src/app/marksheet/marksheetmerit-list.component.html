@@ -1,0 +1,345 @@
+<app-navbar></app-navbar>
+
+<style>
+  .modern-container {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #0a0e27 0%, #1a1d3a 25%, #2d1b69 50%, #1a1d3a 75%, #0a0e27 100%);
+    padding: 20px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+
+  .modern-card {
+    background: rgba(20, 25, 45, 0.95);
+    border: 2px solid #00d4ff;
+    border-radius: 16px;
+    box-shadow: 
+      0 0 25px rgba(0, 212, 255, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    margin: 0 auto;
+    padding: 30px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .modern-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, transparent 30%, rgba(0, 212, 255, 0.05) 50%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .modern-title {
+    color: #ffffff;
+    font-size: 2rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 30px;
+    text-shadow: 0 0 15px rgba(0, 212, 255, 0.5);
+    letter-spacing: 1px;
+  }
+
+  .print-section {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 20px;
+  }
+
+  .btn-modern {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 120px;
+    justify-content: center;
+  }
+
+  .btn-primary-modern {
+    background: linear-gradient(135deg, #3498db, #2980b9);
+    color: white;
+    box-shadow: 0 3px 12px rgba(52, 152, 219, 0.3);
+  }
+
+  .btn-primary-modern:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 16px rgba(52, 152, 219, 0.4);
+  }
+
+  .alert-modern {
+    padding: 12px 16px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    font-weight: 500;
+    position: relative;
+    border: none;
+    font-size: 0.9rem;
+  }
+
+  .alert-success-modern {
+    background: rgba(46, 204, 113, 0.15);
+    color: #2ecc71;
+    border: 1px solid rgba(46, 204, 113, 0.3);
+  }
+
+  .alert-danger-modern {
+    background: rgba(255, 71, 87, 0.15);
+    color: #ff4757;
+    border: 1px solid rgba(255, 71, 87, 0.3);
+  }
+
+  .close-btn {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: inherit;
+    font-size: 1.1rem;
+    cursor: pointer;
+    opacity: 0.7;
+  }
+
+  .close-btn:hover {
+    opacity: 1;
+  }
+
+  .table-container {
+    background: rgba(30, 35, 55, 0.6);
+    border: 1px solid rgba(0, 212, 255, 0.2);
+    border-radius: 12px;
+    padding: 20px;
+    overflow-x: auto;
+    backdrop-filter: blur(5px);
+  }
+
+  .modern-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 0;
+  }
+
+  .modern-table th {
+    background: rgba(0, 212, 255, 0.1);
+    color: #00d4ff;
+    font-weight: 600;
+    padding: 15px 12px;
+    text-align: center;
+    border: 1px solid rgba(0, 212, 255, 0.2);
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .modern-table td {
+    color: #ffffff;
+    padding: 12px;
+    text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    font-size: 0.85rem;
+    transition: all 0.3s ease;
+  }
+
+  .modern-table tbody tr {
+    transition: all 0.3s ease;
+  }
+
+  .modern-table tbody tr:hover {
+    background: rgba(0, 212, 255, 0.05);
+    transform: scale(1.01);
+  }
+
+  .rank-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    font-weight: bold;
+    font-size: 0.8rem;
+  }
+
+  .rank-1 {
+    background: linear-gradient(135deg, #ffd700, #ffed4e);
+    color: #000;
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+  }
+
+  .rank-2 {
+    background: linear-gradient(135deg, #c0c0c0, #e8e8e8);
+    color: #000;
+    box-shadow: 0 0 15px rgba(192, 192, 192, 0.5);
+  }
+
+  .rank-3 {
+    background: linear-gradient(135deg, #cd7f32, #daa520);
+    color: #fff;
+    box-shadow: 0 0 15px rgba(205, 127, 50, 0.5);
+  }
+
+  .percentage-high {
+    color: #2ecc71;
+    font-weight: bold;
+  }
+
+  .percentage-medium {
+    color: #f39c12;
+    font-weight: bold;
+  }
+
+  .percentage-low {
+    color: #e74c3c;
+    font-weight: bold;
+  }
+
+  .no-data {
+    text-align: center;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 1.1rem;
+    padding: 40px;
+  }
+
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .modern-container {
+      padding: 15px;
+    }
+    
+    .modern-card {
+      padding: 20px;
+    }
+    
+    .modern-title {
+      font-size: 1.4rem;
+      margin-bottom: 20px;
+    }
+    
+    .table-container {
+      padding: 15px;
+    }
+    
+    .modern-table th,
+    .modern-table td {
+      padding: 8px 6px;
+      font-size: 0.8rem;
+    }
+    
+    .print-section {
+      justify-content: center;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .modern-card {
+      padding: 15px;
+      border-radius: 12px;
+    }
+    
+    .table-container {
+      padding: 10px;
+    }
+    
+    .modern-table th,
+    .modern-table td {
+      padding: 6px 4px;
+      font-size: 0.75rem;
+    }
+    
+    .btn-modern {
+      padding: 10px 16px;
+      font-size: 0.8rem;
+    }
+  }
+</style>
+
+<div class="modern-container">
+  <div class="modern-card">
+    <h1 class="modern-title">{{'Marksheet Merit List' | translate}}</h1>
+
+    <!-- Print Button Section -->
+    <div class="print-section">
+      <a href="http://localhost:8084/Jasper/report" class="btn-modern btn-primary-modern" target="_blank">
+        <i class="fa fa-print"></i>
+        {{'Print Report' | translate}}
+      </a>
+    </div>
+
+    <!-- Success/Error Messages -->
+    <div *ngIf="form.error" class="alert-modern alert-danger-modern">
+      <button type="button" class="close-btn" data-bs-dismiss="alert" aria-label="Close">×</button>
+      {{form.message}}
+    </div>
+
+    <div *ngIf="!form.error && form.message != null" class="alert-modern alert-success-modern">
+      <button type="button" class="close-btn" data-bs-dismiss="alert" aria-label="Close">×</button>
+      {{form.message}}
+    </div>
+
+    <!-- Merit List Table -->
+    <div class="table-container">
+      <table class="modern-table" *ngIf="form.list.length > 0">
+        <thead>
+          <tr>
+            <th>{{'Rank' | translate}}</th>
+            <th>{{'Roll No' | translate}}</th>
+            <th>{{'Name' | translate}}</th>
+            <th>{{'Physics' | translate}}</th>
+            <th>{{'Chemistry' | translate}}</th>
+            <th>{{'Maths' | translate}}</th>
+            <th>{{'Total' | translate}}</th>
+            <th>{{'Percentage (%)' | translate}}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let m of form.list; let i = index">
+            <td>
+              <span class="rank-badge" 
+                    [ngClass]="{
+                      'rank-1': i === 0,
+                      'rank-2': i === 1,
+                      'rank-3': i === 2
+                    }">
+                {{i + 1}}
+              </span>
+            </td>
+            <td>{{m.rollNo}}</td>
+            <td>{{m.name}}</td>
+            <td>{{m.physics}}</td>
+            <td>{{m.chemistry}}</td>
+            <td>{{m.maths}}</td>
+            <td><strong>{{m.physics + m.maths + m.chemistry}}</strong></td>
+            <td>
+              <span [ngClass]="{
+                      'percentage-high': ((m.physics+m.maths+m.chemistry)*100)/300 >= 80,
+                      'percentage-medium': ((m.physics+m.maths+m.chemistry)*100)/300 >= 60 && ((m.physics+m.maths+m.chemistry)*100)/300 < 80,
+                      'percentage-low': ((m.physics+m.maths+m.chemistry)*100)/300 < 60
+                    }">
+                {{((m.physics+m.maths+m.chemistry)*100)/300 | number:'2.0-2'}}%
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- No Data Message -->
+      <div *ngIf="form.list.length === 0" class="no-data">
+        <i class="fa fa-trophy" style="font-size: 3rem; color: rgba(0, 212, 255, 0.3); margin-bottom: 15px;"></i>
+        <p>{{'No merit list data available' | translate}}</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-footer></app-footer>

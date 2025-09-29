@@ -1,0 +1,820 @@
+<style>
+  .modern-navbar {
+    background: linear-gradient(135deg, rgba(10, 14, 39, 0.98) 0%, rgba(26, 29, 58, 0.98) 50%, rgba(45, 27, 105, 0.98) 100%);
+    backdrop-filter: blur(15px);
+    border-bottom: 1px solid rgba(0, 212, 255, 0.2);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    padding: 12px 0;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    font-family: 'Poppins', 'Noto Sans Devanagari', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+
+  .navbar-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 25px;
+  }
+
+  .logo-section {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .logo-link {
+    text-decoration: none;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+  }
+
+  .logo-link:hover {
+    transform: scale(1.02);
+  }
+
+  .logo-img {
+    height: 45px;
+    width: auto;
+    filter: 
+      brightness(1.3) 
+      contrast(1.2)
+      drop-shadow(0 0 15px rgba(255, 255, 255, 0.8))
+      drop-shadow(0 0 25px rgba(0, 212, 255, 0.6))
+      drop-shadow(0 0 35px rgba(0, 212, 255, 0.4));
+    max-width: 250px;
+    object-fit: contain;
+    transition: all 0.3s ease;
+  }
+
+  .logo-img:hover {
+    filter: 
+      brightness(1.4) 
+      contrast(1.3)
+      drop-shadow(0 0 20px rgba(255, 255, 255, 1))
+      drop-shadow(0 0 30px rgba(0, 212, 255, 0.8))
+      drop-shadow(0 0 40px rgba(0, 212, 255, 0.6));
+    transform: scale(1.05);
+  }
+
+  .lang-select-modern {
+    background: rgba(30, 35, 55, 0.9);
+    border-radius: 6px;
+    color: #ffffff;
+    padding: 8px 12px;
+    font-size: 0.95rem;
+    outline: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 120px;
+    font-family: 'Poppins', 'Noto Sans Devanagari', 'Segoe UI', sans-serif;
+  }
+
+  .lang-select-modern:focus {
+    border-color: #00d4ff;
+    box-shadow: 0 0 8px rgba(0, 212, 255, 0.4);
+  }
+
+  .lang-select-modern option {
+    background: #1e2337;
+    color: #ffffff;
+  }
+
+  .navbar-toggler-modern {
+    background: none;
+    border: 1px solid rgba(0, 212, 255, 0.4);
+    border-radius: 4px;
+    padding: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: none;
+  }
+
+  .navbar-toggler-modern:hover {
+    border-color: #00d4ff;
+    background: rgba(0, 212, 255, 0.1);
+  }
+
+  .navbar-toggler-icon-modern {
+    display: block;
+    width: 22px;
+    height: 2px;
+    background: #00d4ff;
+    margin: 4px 0;
+    transition: 0.3s;
+    border-radius: 1px;
+  }
+
+  .nav-menu {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .nav-item-modern {
+    position: relative;
+  }
+
+  .nav-link-modern {
+    color: #ffffff;
+    text-decoration: none;
+    padding: 10px 16px;
+    border-radius: 6px;
+    font-weight: 500;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    border: 1px solid transparent;
+    white-space: nowrap;
+  }
+
+  .nav-link-modern:hover {
+    background: rgba(0, 212, 255, 0.15);
+    border-color: rgba(0, 212, 255, 0.3);
+    color: #00d4ff;
+    text-decoration: none;
+    transform: translateY(-1px);
+  }
+
+  .dropdown-arrow {
+    font-size: 0.7rem;
+    margin-left: 4px;
+    transition: transform 0.3s ease;
+  }
+
+  .nav-item-modern.active .dropdown-arrow {
+    transform: rotate(180deg);
+  }
+
+  .dropdown-menu-modern {
+    position: absolute;
+    top: calc(100% + 5px);
+    left: 0;
+    background: rgba(15, 20, 35, 0.98);
+    border: 1px solid rgba(0, 212, 255, 0.3);
+    border-radius: 8px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(15px);
+    min-width: 220px;
+    padding: 8px 0;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+    z-index: 1000;
+  }
+
+  .dropdown-menu-modern.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  .dropdown-item-modern {
+    color: #ffffff;
+    text-decoration: none;
+    padding: 12px 18px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    border-left: 3px solid transparent;
+  }
+
+  .dropdown-item-modern:hover {
+    background: rgba(0, 212, 255, 0.1);
+    border-left-color: #00d4ff;
+    color: #00d4ff;
+    text-decoration: none;
+    padding-left: 22px;
+  }
+
+  .dropdown-item-modern i {
+    width: 18px;
+    text-align: center;
+    color: #00d4ff;
+    font-size: 0.9rem;
+  }
+
+  .user-info {
+    color: #00d4ff;
+    font-weight: 600;
+    text-shadow: 0 0 8px rgba(0, 212, 255, 0.3);
+  }
+
+  .guest-dropdown .dropdown-menu-modern {
+    right: 0;
+    left: auto;
+  }
+
+  /* Notification Styles */
+  .notification-badge {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: linear-gradient(135deg, #ff4757, #ff3742);
+    color: white;
+    border-radius: 50%;
+    min-width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    font-weight: 600;
+    border: 2px solid rgba(0, 212, 255, 0.3);
+    box-shadow: 0 0 10px rgba(255, 71, 87, 0.5);
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+  }
+
+  .notification-dropdown {
+    width: 380px;
+    max-height: 500px;
+    overflow: hidden;
+    padding: 0;
+  }
+
+  .notification-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 18px;
+    border-bottom: 1px solid rgba(0, 212, 255, 0.2);
+    background: rgba(0, 212, 255, 0.05);
+    font-weight: 600;
+    color: #00d4ff;
+  }
+
+  .mark-all-read-btn {
+    background: none;
+    border: 1px solid rgba(0, 212, 255, 0.3);
+    color: #00d4ff;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .mark-all-read-btn:hover {
+    background: rgba(0, 212, 255, 0.1);
+    border-color: #00d4ff;
+  }
+
+  .notification-list {
+    max-height: 300px;
+    overflow-y: auto;
+  }
+
+  .no-notifications {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 20px;
+    color: rgba(255, 255, 255, 0.6);
+    gap: 10px;
+  }
+
+  .no-notifications i {
+    font-size: 2rem;
+    color: rgba(0, 212, 255, 0.3);
+  }
+
+  .notification-item {
+    display: flex;
+    align-items: flex-start;
+    padding: 15px 18px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+  }
+
+  .notification-item:hover {
+    background: rgba(0, 212, 255, 0.05);
+  }
+
+  .notification-item.unread {
+    background: rgba(0, 212, 255, 0.03);
+    border-left: 3px solid #00d4ff;
+  }
+
+  .notification-content {
+    flex: 1;
+  }
+
+  .notification-title {
+    font-weight: 600;
+    color: #ffffff;
+    margin-bottom: 4px;
+    font-size: 0.9rem;
+    line-height: 1.3;
+  }
+
+  .notification-body {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.85rem;
+    line-height: 1.4;
+    margin-bottom: 6px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .notification-time {
+    color: rgba(0, 212, 255, 0.7);
+    font-size: 0.75rem;
+    font-weight: 500;
+  }
+
+  .unread-indicator {
+    width: 8px;
+    height: 8px;
+    background: #00d4ff;
+    border-radius: 50%;
+    margin-left: 10px;
+    margin-top: 6px;
+    box-shadow: 0 0 6px rgba(0, 212, 255, 0.6);
+  }
+
+  .notification-footer {
+    border-top: 1px solid rgba(0, 212, 255, 0.2);
+    background: rgba(0, 212, 255, 0.02);
+  }
+
+  .notification-footer .dropdown-item-modern {
+    justify-content: center;
+    font-weight: 500;
+    color: #00d4ff;
+  }
+
+  /* Close dropdowns when clicking outside */
+  .navbar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 999;
+    display: none;
+  }
+
+  .navbar-overlay.show {
+    display: block;
+  }
+
+  /* Mobile Responsive */
+  @media (max-width: 1200px) {
+    .navbar-container {
+      padding: 0 20px;
+    }
+    
+    .nav-menu {
+      gap: 1px;
+    }
+    
+    .nav-link-modern {
+      padding: 8px 12px;
+      font-size: 0.9rem;
+    }
+    
+    .dropdown-item-modern {
+      font-size: 0.9rem;
+    }
+  }
+
+  @media (max-width: 992px) {
+    .navbar-toggler-modern {
+      display: block;
+    }
+
+    .nav-menu {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: rgba(15, 20, 35, 0.98);
+      border: 1px solid rgba(0, 212, 255, 0.3);
+      border-top: none;
+      border-radius: 0 0 12px 12px;
+      flex-direction: column;
+      padding: 20px;
+      gap: 8px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(15px);
+    }
+
+    .nav-menu.show {
+      display: flex;
+    }
+
+    .nav-item-modern {
+      width: 100%;
+    }
+
+    .nav-link-modern {
+      width: 100%;
+      justify-content: space-between;
+      padding: 14px 16px;
+      border-radius: 8px;
+    }
+
+    .dropdown-menu-modern {
+      position: static;
+      opacity: 1;
+      visibility: visible;
+      transform: none;
+      box-shadow: none;
+      border: 1px solid rgba(0, 212, 255, 0.2);
+      margin-top: 8px;
+      margin-left: 0;
+      background: rgba(10, 15, 25, 0.9);
+    }
+
+    .navbar-container {
+      position: relative;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .navbar-container {
+      padding: 0 15px;
+    }
+
+    .logo-img {
+      height: 35px;
+    }
+
+    .lang-select-modern {
+      font-size: 0.8rem;
+      padding: 6px 10px;
+      min-width: 100px;
+    }
+
+    .logo-section {
+      gap: 15px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .navbar-container {
+      padding: 0 12px;
+    }
+
+    .logo-section {
+      gap: 12px;
+    }
+
+    .nav-menu {
+      padding: 15px;
+    }
+
+    .logo-img {
+      height: 32px;
+    }
+
+    .lang-select-modern {
+      min-width: 90px;
+      font-size: 0.75rem;
+    }
+  }
+</style>
+
+<!-- Overlay for closing dropdowns -->
+<div class="navbar-overlay" (click)="closeAllDropdowns()"></div>
+
+<!-- Guest Navigation -->
+<nav *ngIf="!isLogin()" class="modern-navbar">
+  <div class="navbar-container">
+    <div class="logo-section">
+      <a class="logo-link" [routerLink]="['/dashboard']">
+        <img src="assets/files/rays-logo.png" alt="RAYS Logo" class="logo-img">
+      </a>
+      
+      <select #locale (change)="changeLocale(locale.value)" [value]="currentLanguage" class="lang-select-modern" aria-label="Change language">
+        <option value="en">English</option>
+        <option value="hi">हिंदी</option>
+      </select>
+    </div>
+
+    <button class="navbar-toggler-modern" type="button" (click)="toggleMobileMenu()">
+      <span class="navbar-toggler-icon-modern"></span>
+      <span class="navbar-toggler-icon-modern"></span>
+      <span class="navbar-toggler-icon-modern"></span>
+    </button>
+
+    <ul class="nav-menu" [class.show]="mobileMenuOpen">
+      <li class="nav-item-modern guest-dropdown">
+        <a class="nav-link-modern" (click)="toggleDropdown($event, 'guestDropdown')">
+          <span class="user-info">{{'Hi, Guest' | translate}}</span>
+          <i class="fa fa-chevron-down dropdown-arrow"></i>
+        </a>
+        <div class="dropdown-menu-modern" id="guestDropdownMenu">
+          <a class="dropdown-item-modern" [routerLink]="['/login']">
+            <i class="fa fa-sign-in"></i>
+            {{'Log in' | translate}}
+          </a>
+          <a class="dropdown-item-modern" [routerLink]="['/signup']">
+            <i class="fa fa-user-plus"></i>
+            {{'User Registration' | translate}}
+          </a>
+          <a class="dropdown-item-modern" (click)="openSwaggerUI()">
+            <i class="fa fa-book"></i>
+            {{'API Documentation' | translate}}
+          </a>
+        </div>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+<!-- Authenticated User Navigation -->
+<nav *ngIf="isLogin()" class="modern-navbar">
+  <div class="navbar-container">
+    <div class="logo-section">
+      <a class="logo-link" [routerLink]="['/dashboard']">
+        <img src="assets/files/rays-logo.png" alt="RAYS Logo" class="logo-img">
+      </a>
+      
+      <select #locale (change)="changeLocale(locale.value)" [value]="currentLanguage" class="lang-select-modern" aria-label="Change language">
+        <option value="en">English</option>
+        <option value="hi">हिंदी</option>
+      </select>
+    </div>
+
+    <button class="navbar-toggler-modern" type="button" (click)="toggleMobileMenu()">
+      <span class="navbar-toggler-icon-modern"></span>
+      <span class="navbar-toggler-icon-modern"></span>
+      <span class="navbar-toggler-icon-modern"></span>
+    </button>
+
+    <ul class="nav-menu" [class.show]="mobileMenuOpen">
+      <!-- User Management -->
+      <li class="nav-item-modern">
+        <a class="nav-link-modern" (click)="toggleDropdown($event, 'userDropdown')">
+          {{'User' | translate}}
+          <i class="fa fa-chevron-down dropdown-arrow"></i>
+        </a>
+        <div class="dropdown-menu-modern" id="userDropdownMenu">
+          <a class="dropdown-item-modern" [routerLink]="['/user']">
+            <i class="fa fa-user-plus"></i>
+            {{'Add User' | translate}}
+          </a>
+          <a class="dropdown-item-modern" [routerLink]="['/userlist']">
+            <i class="fa fa-list"></i>
+            {{'User List' | translate}}
+          </a>
+        </div>
+      </li>
+
+      <!-- Marksheet Management -->
+      <li class="nav-item-modern">
+        <a class="nav-link-modern" (click)="toggleDropdown($event, 'marksheetDropdown')">
+          {{'Marksheet' | translate}}
+          <i class="fa fa-chevron-down dropdown-arrow"></i>
+        </a>
+        <div class="dropdown-menu-modern" id="marksheetDropdownMenu">
+          <a class="dropdown-item-modern" [routerLink]="['/marksheet']">
+            <i class="fa fa-file-text"></i>
+            {{'Add Marksheet' | translate}}
+          </a>
+          <a class="dropdown-item-modern" [routerLink]="['/marksheetlist']">
+            <i class="fa fa-list"></i>
+            {{'Marksheet List' | translate}}
+          </a>
+          <a class="dropdown-item-modern" [routerLink]="['/marksheetmeritlist']">
+            <i class="fa fa-trophy"></i>
+            {{'Merit List' | translate}}
+          </a>
+          <a class="dropdown-item-modern" [routerLink]="['/getmarksheet']">
+            <i class="fa fa-download"></i>
+            {{'Get Marksheet' | translate}}
+          </a>
+        </div>
+      </li>
+
+      <!-- Role Management -->
+      <li class="nav-item-modern">
+        <a class="nav-link-modern" (click)="toggleDropdown($event, 'roleDropdown')">
+          {{'Role' | translate}}
+          <i class="fa fa-chevron-down dropdown-arrow"></i>
+        </a>
+        <div class="dropdown-menu-modern" id="roleDropdownMenu">
+          <a class="dropdown-item-modern" [routerLink]="['/role']">
+            <i class="fa fa-user-circle"></i>
+            {{'Add Role' | translate}}
+          </a>
+          <a class="dropdown-item-modern" [routerLink]="['/rolelist']">
+            <i class="fa fa-users"></i>
+            {{'Role List' | translate}}
+          </a>
+        </div>
+      </li>
+
+      <!-- College Management -->
+      <li class="nav-item-modern">
+        <a class="nav-link-modern" (click)="toggleDropdown($event, 'collegeDropdown')">
+          {{'College' | translate}}
+          <i class="fa fa-chevron-down dropdown-arrow"></i>
+        </a>
+        <div class="dropdown-menu-modern" id="collegeDropdownMenu">
+          <a class="dropdown-item-modern" [routerLink]="['/college']">
+            <i class="fa fa-university"></i>
+            {{'Add College' | translate}}
+          </a>
+          <a class="dropdown-item-modern" [routerLink]="['/collegelist']">
+            <i class="fa fa-building"></i>
+            {{'College List' | translate}}
+          </a>
+        </div>
+      </li>
+
+      <!-- Course Management -->
+      <li class="nav-item-modern">
+        <a class="nav-link-modern" (click)="toggleDropdown($event, 'courseDropdown')">
+          {{'Course' | translate}}
+          <i class="fa fa-chevron-down dropdown-arrow"></i>
+        </a>
+        <div class="dropdown-menu-modern" id="courseDropdownMenu">
+          <a class="dropdown-item-modern" [routerLink]="['/course']">
+            <i class="fa fa-book"></i>
+            {{'Add Course' | translate}}
+          </a>
+          <a class="dropdown-item-modern" [routerLink]="['/courselist']">
+            <i class="fa fa-list"></i>
+            {{'Course List' | translate}}
+          </a>
+        </div>
+      </li>
+
+      <!-- Student Management -->
+      <li class="nav-item-modern">
+        <a class="nav-link-modern" (click)="toggleDropdown($event, 'studentDropdown')">
+          {{'Student' | translate}}
+          <i class="fa fa-chevron-down dropdown-arrow"></i>
+        </a>
+        <div class="dropdown-menu-modern" id="studentDropdownMenu">
+          <a class="dropdown-item-modern" [routerLink]="['/student']">
+            <i class="fa fa-user-plus"></i>
+            {{'Add Student' | translate}}
+          </a>
+          <a class="dropdown-item-modern" [routerLink]="['/studentlist']">
+            <i class="fa fa-users"></i>
+            {{'Student List' | translate}}
+          </a>
+        </div>
+      </li>
+
+      <!-- Faculty Management -->
+      <li class="nav-item-modern">
+        <a class="nav-link-modern" (click)="toggleDropdown($event, 'facultyDropdown')">
+          {{'Faculty' | translate}}
+          <i class="fa fa-chevron-down dropdown-arrow"></i>
+        </a>
+        <div class="dropdown-menu-modern" id="facultyDropdownMenu">
+          <a class="dropdown-item-modern" [routerLink]="['/faculty']">
+            <i class="fa fa-user-circle"></i>
+            {{'Add Faculty' | translate}}
+          </a>
+          <a class="dropdown-item-modern" [routerLink]="['/facultylist']">
+            <i class="fa fa-users"></i>
+            {{'Faculty List' | translate}}
+          </a>
+        </div>
+      </li>
+
+      <!-- Timetable Management -->
+      <li class="nav-item-modern">
+        <a class="nav-link-modern" (click)="toggleDropdown($event, 'timetableDropdown')">
+          {{'Time Table' | translate}}
+          <i class="fa fa-chevron-down dropdown-arrow"></i>
+        </a>
+        <div class="dropdown-menu-modern" id="timetableDropdownMenu">
+          <a class="dropdown-item-modern" [routerLink]="['/timetable']">
+            <i class="fa fa-clock-o"></i>
+            {{'Add Time Table' | translate}}
+          </a>
+          <a class="dropdown-item-modern" [routerLink]="['/timetablelist']">
+            <i class="fa fa-list"></i>
+            {{'Time Table List' | translate}}
+          </a>
+        </div>
+      </li>
+
+      <!-- Subject Management -->
+      <li class="nav-item-modern">
+        <a class="nav-link-modern" (click)="toggleDropdown($event, 'subjectDropdown')">
+          {{'Subject' | translate}}
+          <i class="fa fa-chevron-down dropdown-arrow"></i>
+        </a>
+        <div class="dropdown-menu-modern" id="subjectDropdownMenu">
+          <a class="dropdown-item-modern" [routerLink]="['/subject']">
+            <i class="fa fa-file-text"></i>
+            {{'Add Subject' | translate}}
+          </a>
+          <a class="dropdown-item-modern" [routerLink]="['/subjectlist']">
+            <i class="fa fa-list"></i>
+            {{'Subject List' | translate}}
+          </a>
+        </div>
+      </li>
+
+      <!-- Admin Notifications (Admin Only) -->
+      <li class="nav-item-modern" *ngIf="form.data.role === 'Admin'">
+        <a class="nav-link-modern" [routerLink]="['/admin-notifications']">
+          <i class="fa fa-bullhorn" style="font-size: 1.1rem;"></i>
+          Admin Notifications
+        </a>
+      </li>
+
+      <!-- Notifications -->
+      <li class="nav-item-modern">
+        <a class="nav-link-modern" (click)="toggleDropdown($event, 'notificationDropdown')" style="position: relative;">
+          <i class="fa fa-bell" style="font-size: 1.1rem;"></i>
+          <span *ngIf="unreadCount > 0" class="notification-badge">{{unreadCount > 99 ? '99+' : unreadCount}}</span>
+          <i class="fa fa-chevron-down dropdown-arrow"></i>
+        </a>
+        <div class="dropdown-menu-modern notification-dropdown" id="notificationDropdownMenu">
+          <div class="notification-header">
+            <span>{{'Notifications' | translate}}</span>
+            <button *ngIf="unreadCount > 0" class="mark-all-read-btn" (click)="markAllAsRead()">
+              {{'Mark all as read' | translate}}
+            </button>
+          </div>
+          <div class="notification-list">
+            <div *ngIf="notifications.length === 0" class="no-notifications">
+              <i class="fa fa-bell-slash"></i>
+              <span>{{'No notifications' | translate}}</span>
+            </div>
+            <div *ngFor="let notification of notifications.slice(0, 5)" 
+                 class="notification-item" 
+                 [class.unread]="notification.readStatus === 'unread'"
+                 (click)="markAsRead(notification.id)">
+              <div class="notification-content">
+                <div class="notification-title">{{notification.title}}</div>
+                <div class="notification-body">{{notification.body}}</div>
+                <div class="notification-time">{{getTimeAgo(notification.sentTime)}}</div>
+              </div>
+              <div *ngIf="notification.readStatus === 'unread'" class="unread-indicator"></div>
+            </div>
+          </div>
+          <div class="notification-footer">
+            <a class="dropdown-item-modern" [routerLink]="['/notifications']">
+              <i class="fa fa-list"></i>
+              {{'View all notifications' | translate}}
+            </a>
+          </div>
+        </div>
+      </li>
+
+      <!-- Profile Management -->
+      <li class="nav-item-modern">
+        <a class="nav-link-modern" (click)="toggleDropdown($event, 'profileDropdown')">
+          <span class="user-info">{{form.data.fname}} ({{form.data.role}})</span>
+          <i class="fa fa-chevron-down dropdown-arrow"></i>
+        </a>
+        <div class="dropdown-menu-modern" id="profileDropdownMenu">
+          <a class="dropdown-item-modern" (click)="forward()">
+            <i class="fa fa-user"></i>
+            {{'My Profile' | translate}}
+          </a>
+          <a class="dropdown-item-modern" [routerLink]="['/changepassword']">
+            <i class="fa fa-key"></i>
+            {{'Change Password' | translate}}
+          </a>
+          <a class="dropdown-item-modern" (click)="goToLink()">
+            <i class="fa fa-code"></i>
+            {{'Java Doc' | translate}}
+          </a>
+          <a class="dropdown-item-modern" (click)="openSwaggerUI()">
+            <i class="fa fa-book"></i>
+            {{'API Documentation' | translate}}
+          </a>
+          <a class="dropdown-item-modern" (click)="logout()">
+            <i class="fa fa-sign-out"></i>
+            {{'Log Out' | translate}}
+          </a>
+        </div>
+      </li>
+    </ul>
+  </div>
+</nav>

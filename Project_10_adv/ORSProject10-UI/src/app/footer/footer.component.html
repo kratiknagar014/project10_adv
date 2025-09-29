@@ -1,0 +1,645 @@
+<style>
+  .modern-footer {
+    background: linear-gradient(135deg, rgba(10, 14, 39, 0.98) 0%, rgba(26, 29, 58, 0.98) 25%, rgba(45, 27, 105, 0.98) 50%, rgba(26, 29, 58, 0.98) 75%, rgba(10, 14, 39, 0.98) 100%);
+    backdrop-filter: blur(20px);
+    border-top: 3px solid rgba(0, 212, 255, 0.4);
+    color: #ffffff;
+    font-family: 'Poppins', 'Noto Sans Devanagari', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 -10px 30px rgba(0, 212, 255, 0.1);
+    margin-top: 50px;
+    width: 100%;
+    z-index: 10;
+  }
+
+  .modern-footer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+      radial-gradient(circle at 20% 50%, rgba(0, 212, 255, 0.05) 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, rgba(0, 212, 255, 0.03) 0%, transparent 50%),
+      linear-gradient(45deg, transparent 30%, rgba(0, 212, 255, 0.02) 50%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .footer-content {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 50px 30px 25px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .footer-main {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+    gap: 50px;
+    margin-bottom: 40px;
+    align-items: start;
+  }
+
+  .footer-section {
+    text-align: left;
+  }
+
+  .footer-section h3 {
+    color: #00d4ff;
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 25px;
+    text-shadow: 0 0 12px rgba(0, 212, 255, 0.4);
+    position: relative;
+    padding-bottom: 10px;
+  }
+
+  .footer-section h3::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 40px;
+    height: 2px;
+    background: linear-gradient(90deg, #00d4ff, transparent);
+    border-radius: 1px;
+  }
+
+  .company-info {
+    text-align: left;
+    padding-right: 20px;
+  }
+
+  .company-name {
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: #00d4ff;
+    margin-bottom: 12px;
+    text-shadow: 0 0 20px rgba(0, 212, 255, 0.6);
+    letter-spacing: 1.5px;
+    background: linear-gradient(135deg, #00d4ff, #0099cc);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .company-tagline {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 1.1rem;
+    margin-bottom: 25px;
+    font-style: italic;
+    font-weight: 300;
+    letter-spacing: 0.5px;
+  }
+
+  .company-description {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.95rem;
+    line-height: 1.7;
+    margin-bottom: 25px;
+    text-align: justify;
+  }
+
+  .footer-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .footer-links li {
+    margin-bottom: 12px;
+    position: relative;
+    padding-left: 15px;
+  }
+
+  .footer-links li::before {
+    content: '▶';
+    position: absolute;
+    left: 0;
+    color: #00d4ff;
+    font-size: 0.7rem;
+    transition: all 0.3s ease;
+  }
+
+  .footer-links a {
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    display: inline-block;
+    font-weight: 400;
+  }
+
+  .footer-links a:hover {
+    color: #00d4ff;
+    text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+    transform: translateX(8px);
+  }
+
+  .footer-links li:hover::before {
+    color: #ffffff;
+    transform: translateX(3px);
+  }
+
+  .contact-info {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.95rem;
+    line-height: 1.8;
+  }
+
+  .contact-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    transition: all 0.3s ease;
+    padding: 8px 0;
+  }
+
+  .contact-item:hover {
+    color: #00d4ff;
+    transform: translateX(5px);
+  }
+
+  .contact-item i {
+    color: #00d4ff;
+    margin-right: 12px;
+    width: 20px;
+    font-size: 1.1rem;
+    text-align: center;
+  }
+
+  .social-links {
+    display: flex;
+    justify-content: flex-start;
+    gap: 15px;
+    margin-top: 25px;
+    flex-wrap: wrap;
+  }
+
+  .social-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 45px;
+    height: 45px;
+    background: rgba(0, 212, 255, 0.1);
+    border: 2px solid rgba(0, 212, 255, 0.3);
+    border-radius: 12px;
+    color: #00d4ff !important;
+    text-decoration: none;
+    font-size: 1.3rem;
+    transition: all 0.4s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .social-link i {
+    font-size: 1.2rem;
+    line-height: 1;
+    display: block;
+    color: inherit;
+    min-width: 16px;
+    min-height: 16px;
+  }
+
+  /* Font Awesome 6 Brand Icons Support */
+  .social-link i[class*="fa-brands"] {
+    font-family: "Font Awesome 6 Brands";
+    font-weight: 400;
+  }
+
+  /* Fallback for missing icons */
+  .social-link i:before {
+    display: inline-block;
+    font-style: normal;
+    font-variant: normal;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .social-link::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    transition: all 0.6s ease;
+  }
+
+  .social-link:hover::before {
+    left: 100%;
+  }
+
+  .social-link:hover {
+    background: rgba(0, 212, 255, 0.2);
+    border-color: #00d4ff;
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 0 8px 25px rgba(0, 212, 255, 0.4);
+    color: #ffffff !important;
+  }
+
+  .social-link:hover i {
+    color: #ffffff !important;
+  }
+
+  .newsletter-section {
+    background: rgba(0, 212, 255, 0.05);
+    border: 1px solid rgba(0, 212, 255, 0.2);
+    border-radius: 12px;
+    padding: 25px;
+    margin-top: 20px;
+  }
+
+  .newsletter-input {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+  }
+
+  .newsletter-input input {
+    flex: 1;
+    padding: 12px 15px;
+    background: rgba(30, 35, 55, 0.8);
+    border: 2px solid rgba(0, 212, 255, 0.3);
+    border-radius: 8px;
+    color: #ffffff;
+    font-size: 0.9rem;
+    outline: none;
+    transition: all 0.3s ease;
+  }
+
+  .newsletter-input input:focus {
+    border-color: #00d4ff;
+    box-shadow: 0 0 15px rgba(0, 212, 255, 0.3);
+  }
+
+  .newsletter-input input::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+  }
+
+  .newsletter-btn {
+    padding: 12px 20px;
+    background: linear-gradient(135deg, #00d4ff, #0099cc);
+    border: none;
+    border-radius: 8px;
+    color: #ffffff;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+  }
+
+  .newsletter-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 212, 255, 0.4);
+  }
+
+  .footer-bottom {
+    border-top: 2px solid rgba(0, 212, 255, 0.2);
+    padding: 25px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+  }
+
+  .copyright-section {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .copyright-text {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.9rem;
+    margin: 0;
+  }
+
+  .company-link {
+    color: #00d4ff;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+  }
+
+  .company-link:hover {
+    text-shadow: 0 0 12px rgba(0, 212, 255, 0.6);
+    color: #ffffff;
+  }
+
+  .footer-badges {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+  }
+
+  .badge {
+    padding: 6px 12px;
+    background: rgba(0, 212, 255, 0.1);
+    border: 1px solid rgba(0, 212, 255, 0.3);
+    border-radius: 20px;
+    color: #00d4ff;
+    font-size: 0.8rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+  }
+
+  .badge:hover {
+    background: rgba(0, 212, 255, 0.2);
+    transform: scale(1.05);
+  }
+
+  .footer-accent {
+    height: 4px;
+    background: linear-gradient(90deg, transparent, #00d4ff, #0099cc, #00d4ff, transparent);
+    margin-top: 20px;
+    border-radius: 2px;
+    animation: shimmer 3s ease-in-out infinite;
+  }
+
+  @keyframes shimmer {
+    0%, 100% {
+      opacity: 0.6;
+      transform: scaleX(1);
+    }
+    50% {
+      opacity: 1;
+      transform: scaleX(1.02);
+    }
+  }
+
+  .back-to-top {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, #00d4ff, #0099cc);
+    border: none;
+    border-radius: 50%;
+    color: #ffffff;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 1000;
+    box-shadow: 0 4px 15px rgba(0, 212, 255, 0.3);
+  }
+
+  .back-to-top:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 212, 255, 0.5);
+  }
+
+  /* Responsive Design */
+  @media (max-width: 1200px) {
+    .footer-main {
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 40px;
+    }
+  }
+
+  @media (max-width: 992px) {
+    .footer-main {
+      grid-template-columns: 1fr 1fr;
+      gap: 35px;
+    }
+    
+    .company-info {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding-right: 0;
+    }
+    
+    .footer-section {
+      text-align: center;
+    }
+    
+    .footer-section h3::after {
+      left: 50%;
+      transform: translateX(-50%);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .footer-content {
+      padding: 40px 20px 20px;
+    }
+    
+    .footer-main {
+      grid-template-columns: 1fr;
+      gap: 30px;
+      text-align: center;
+    }
+    
+    .company-name {
+      font-size: 1.8rem;
+    }
+    
+    .social-links {
+      justify-content: center;
+      gap: 12px;
+    }
+    
+    .social-link {
+      width: 40px;
+      height: 40px;
+      font-size: 1.1rem;
+    }
+    
+    .footer-bottom {
+      flex-direction: column;
+      text-align: center;
+      gap: 20px;
+    }
+    
+    .newsletter-input {
+      flex-direction: column;
+    }
+    
+    .newsletter-btn {
+      width: 100%;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .footer-content {
+      padding: 30px 15px 15px;
+    }
+    
+    .company-name {
+      font-size: 1.5rem;
+    }
+    
+    .footer-section h3 {
+      font-size: 1.1rem;
+    }
+    
+    .social-links {
+      gap: 10px;
+    }
+    
+    .social-link {
+      width: 35px;
+      height: 35px;
+      font-size: 1rem;
+    }
+    
+    .back-to-top {
+      width: 45px;
+      height: 45px;
+      bottom: 20px;
+      right: 20px;
+    }
+  }
+</style>
+
+<footer class="modern-footer">
+  <div class="footer-content">
+    <div class="footer-main">
+      <!-- Company Information -->
+      <div class="footer-section company-info">
+        <div class="company-name">{{'RAYS Technologies' | translate}}</div>
+        <div class="company-tagline">{{'Think IT Think Us' | translate}}</div>
+        <div class="company-description">
+          {{'Leading provider of innovative educational technology solutions, specializing in comprehensive Online Result Systems and academic management platforms for modern educational institutions.' | translate}}
+        </div>
+        <div class="contact-info">
+          <div class="contact-item">
+            <i class="fa fa-map-marker"></i>
+            <span>{{'Address: sunRays House, 82, Jaora Compound, Indore, Madhya Pradesh 452001' | translate}}</span>
+          </div>
+          <div class="contact-item">
+            <i class="fa fa-phone"></i>
+            <span>+91 900xx58566</span>
+          </div>
+          <div class="contact-item">
+            <i class="fa fa-envelope"></i>
+            <span>info@raystec.com</span>
+          </div>
+          <div class="contact-item">
+            <i class="fa fa-globe"></i>
+            <span>www.raystechnologies.com</span>
+          </div>
+        </div>
+        <div class="social-links">
+          <a href="https://facebook.com/raystechnologies" class="social-link" title="Facebook" target="_blank">
+            <i class="fab fa-facebook-f"></i>
+          </a>
+          <a href="https://twitter.com/raystechnologies" class="social-link" title="Twitter" target="_blank">
+            <i class="fab fa-twitter"></i>
+          </a>
+          <a href="https://linkedin.com/company/raystechnologies" class="social-link" title="LinkedIn" target="_blank">
+            <i class="fab fa-linkedin-in"></i>
+          </a>
+          <a href="https://instagram.com/raystechnologies" class="social-link" title="Instagram" target="_blank">
+            <i class="fab fa-instagram"></i>
+          </a>
+          <a href="https://youtube.com/raystechnologies" class="social-link" title="YouTube" target="_blank">
+            <i class="fab fa-youtube"></i>
+          </a>
+          <a href="https://github.com/raystechnologies" class="social-link" title="GitHub" target="_blank">
+            <i class="fab fa-github"></i>
+          </a>
+        </div>
+      </div>
+
+      <!-- Quick Links -->
+      <div class="footer-section">
+        <h3>{{'Quick Links' | translate}}</h3>
+        <ul class="footer-links">
+          <li><a href="/dashboard">{{'Dashboard' | translate}}</a></li>
+          <li><a href="/user">{{'User Management' | translate}}</a></li>
+          <li><a href="/student">{{'Student Records' | translate}}</a></li>
+          <li><a href="/faculty">{{'Faculty Management' | translate}}</a></li>
+          <li><a href="/marksheet">{{'Results & Reports' | translate}}</a></li>
+          <li><a href="/college">{{'Institution Management' | translate}}</a></li>
+          <li><a href="/timetable">{{'Timetable System' | translate}}</a></li>
+        </ul>
+      </div>
+
+      <!-- Academic Services -->
+      <div class="footer-section">
+        <h3>{{'Academic Services' | translate}}</h3>
+        <ul class="footer-links">
+          <li><a href="#">{{'Online Result System' | translate}}</a></li>
+          <li><a href="#">{{'Student Information System' | translate}}</a></li>
+          <li><a href="#">{{'Faculty Management Portal' | translate}}</a></li>
+          <li><a href="#">{{'Course & Curriculum Management' | translate}}</a></li>
+          <li><a href="#">{{'Examination Management' | translate}}</a></li>
+          <li><a href="#">{{'Academic Analytics' | translate}}</a></li>
+          <li><a href="#">{{'Digital Marksheet Generation' | translate}}</a></li>
+        </ul>
+      </div>
+
+      <!-- Support & Resources -->
+      <div class="footer-section">
+        <h3>{{'Support & Resources' | translate}}</h3>
+        <ul class="footer-links">
+          <li><a href="#">{{'24/7 Help Center' | translate}}</a></li>
+          <li><a href="#">{{'Technical Documentation' | translate}}</a></li>
+          <li><a href="#">{{'Video Tutorials' | translate}}</a></li>
+          <li><a href="#">{{'System Requirements' | translate}}</a></li>
+          <li><a href="#">{{'Contact Technical Support' | translate}}</a></li>
+          <li><a href="#">{{'Feature Requests' | translate}}</a></li>
+          <li><a href="#">{{'Bug Reports' | translate}}</a></li>
+        </ul>
+      </div>
+
+      <!-- Newsletter & Updates -->
+      <div class="footer-section">
+        <h3>{{'Stay Updated' | translate}}</h3>
+        <ul class="footer-links">
+          <li><a href="#">{{'Privacy Policy' | translate}}</a></li>
+          <li><a href="#">{{'Terms of Service' | translate}}</a></li>
+          <li><a href="#">{{'Data Security' | translate}}</a></li>
+          <li><a href="#">{{'Compliance Standards' | translate}}</a></li>
+          <li><a href="#">{{'Release Notes' | translate}}</a></li>
+        </ul>
+        
+        <div class="newsletter-section">
+          <h4 style="color: #00d4ff; margin-bottom: 10px; font-size: 1rem;">{{'Newsletter Subscription' | translate}}</h4>
+          <p style="color: rgba(255,255,255,0.7); font-size: 0.85rem; margin-bottom: 15px;">
+            {{'Get latest updates about new features and system enhancements' | translate}}
+          </p>
+          <div class="newsletter-input">
+            <input type="email" placeholder="{{'Enter your email address' | translate}}" />
+            <button class="newsletter-btn">
+              <i class="fa fa-paper-plane"></i>
+              {{'Subscribe' | translate}}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div class="copyright-section">
+        <span class="copyright-text">&copy; 2024 {{'All Rights Reserved' | translate}}</span>
+        <a class="company-link" href="https://www.raystechnologies.com" target="_blank">
+          {{'RAYS Technologies Pvt. Ltd.' | translate}}
+        </a>
+      </div>
+      
+      <div class="footer-badges">
+        <span class="badge">{{'ISO 27001 Certified' | translate}}</span>
+        <span class="badge">{{'GDPR Compliant' | translate}}</span>
+        <span class="badge">{{'24/7 Support' | translate}}</span>
+        <span class="badge">{{'Cloud Secure' | translate}}</span>
+      </div>
+    </div>
+    
+    <div class="footer-accent"></div>
+  </div>
+
+  <!-- Back to Top Button -->
+  <button class="back-to-top" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" title="{{'Back to Top' | translate}}">
+    <i class="fa fa-chevron-up"></i>
+  </button>
+</footer>

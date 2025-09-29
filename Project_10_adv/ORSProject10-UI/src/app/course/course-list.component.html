@@ -1,0 +1,567 @@
+<app-navbar></app-navbar>
+
+<style>
+  .modern-container {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #0a0e27 0%, #1a1d3a 25%, #2d1b69 50%, #1a1d3a 75%, #0a0e27 100%);
+    padding: 20px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+
+  .modern-card {
+    background: rgba(20, 25, 45, 0.95);
+    border: 2px solid #00d4ff;
+    border-radius: 16px;
+    box-shadow: 
+      0 0 25px rgba(0, 212, 255, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    margin: 0 auto;
+    padding: 30px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .modern-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, transparent 30%, rgba(0, 212, 255, 0.05) 50%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .modern-title {
+    color: #ffffff;
+    font-size: 2rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 30px;
+    text-shadow: 0 0 15px rgba(0, 212, 255, 0.5);
+    letter-spacing: 1px;
+  }
+
+  .search-section {
+    background: rgba(30, 35, 55, 0.6);
+    border: 1px solid rgba(0, 212, 255, 0.2);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 25px;
+    backdrop-filter: blur(5px);
+  }
+
+  .search-row {
+    display: flex;
+    gap: 15px;
+    align-items: end;
+    flex-wrap: wrap;
+    margin-bottom: 15px;
+  }
+
+  .search-group {
+    flex: 1;
+    min-width: 200px;
+  }
+
+  .search-group.button-group {
+    flex: 0 0 auto;
+    min-width: 120px;
+  }
+
+  .search-label {
+    color: #ffffff;
+    font-weight: 500;
+    margin-bottom: 6px;
+    display: block;
+    font-size: 0.9rem;
+  }
+
+  .modern-input, .modern-select {
+    width: 100%;
+    padding: 10px 12px;
+    background: rgba(30, 35, 55, 0.8);
+    border: 2px solid rgba(0, 212, 255, 0.3);
+    border-radius: 8px;
+    color: #ffffff;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    outline: none;
+  }
+
+  .modern-input:focus, .modern-select:focus {
+    border-color: #00d4ff;
+    box-shadow: 0 0 10px rgba(0, 212, 255, 0.4);
+    background: rgba(30, 35, 55, 0.95);
+  }
+
+  .modern-input::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+  }
+
+  .modern-select option {
+    background: #1e2337;
+    color: #ffffff;
+  }
+
+  .btn-modern {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 120px;
+    justify-content: center;
+    width: 100%;
+    white-space: nowrap;
+  }
+
+  .btn-primary-modern {
+    background: linear-gradient(135deg, #3498db, #2980b9);
+    color: white;
+    box-shadow: 0 3px 12px rgba(52, 152, 219, 0.3);
+  }
+
+  .btn-primary-modern:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 5px 16px rgba(52, 152, 219, 0.4);
+  }
+
+  .btn-success-modern {
+    background: linear-gradient(135deg, #2ecc71, #27ae60);
+    color: white;
+    box-shadow: 0 3px 12px rgba(46, 204, 113, 0.3);
+  }
+
+  .btn-success-modern:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 5px 16px rgba(46, 204, 113, 0.4);
+  }
+
+  .btn-danger-modern {
+    background: linear-gradient(135deg, #e74c3c, #c0392b);
+    color: white;
+    box-shadow: 0 3px 12px rgba(231, 76, 60, 0.3);
+  }
+
+  .btn-danger-modern:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 5px 16px rgba(231, 76, 60, 0.4);
+  }
+
+  .btn-info-modern {
+    background: linear-gradient(135deg, #17a2b8, #138496);
+    color: white;
+    box-shadow: 0 3px 12px rgba(23, 162, 184, 0.3);
+  }
+
+  .btn-info-modern:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 5px 16px rgba(23, 162, 184, 0.4);
+  }
+
+  .btn-warning-modern {
+    background: linear-gradient(135deg, #f39c12, #e67e22);
+    color: white;
+    box-shadow: 0 3px 12px rgba(243, 156, 18, 0.3);
+  }
+
+  .btn-warning-modern:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 5px 16px rgba(243, 156, 18, 0.4);
+  }
+
+  .btn-modern:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none !important;
+  }
+
+  .alert-modern {
+    padding: 12px 16px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    font-weight: 500;
+    position: relative;
+    border: none;
+    font-size: 0.9rem;
+  }
+
+  .alert-success-modern {
+    background: rgba(46, 204, 113, 0.15);
+    color: #2ecc71;
+    border: 1px solid rgba(46, 204, 113, 0.3);
+  }
+
+  .alert-danger-modern {
+    background: rgba(255, 71, 87, 0.15);
+    color: #ff4757;
+    border: 1px solid rgba(255, 71, 87, 0.3);
+  }
+
+  .close-btn {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: inherit;
+    font-size: 1.1rem;
+    cursor: pointer;
+    opacity: 0.7;
+  }
+
+  .close-btn:hover {
+    opacity: 1;
+  }
+
+  .table-container {
+    background: rgba(30, 35, 55, 0.6);
+    border: 1px solid rgba(0, 212, 255, 0.2);
+    border-radius: 12px;
+    padding: 20px;
+    overflow-x: auto;
+    backdrop-filter: blur(5px);
+  }
+
+  .modern-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 0;
+  }
+
+  .modern-table th {
+    background: rgba(0, 212, 255, 0.1);
+    color: #00d4ff;
+    font-weight: 600;
+    padding: 15px 12px;
+    text-align: center;
+    border: 1px solid rgba(0, 212, 255, 0.2);
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .modern-table td {
+    color: #ffffff;
+    padding: 12px;
+    text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    font-size: 0.85rem;
+    transition: all 0.3s ease;
+  }
+
+  .modern-table tbody tr {
+    transition: all 0.3s ease;
+  }
+
+  .modern-table tbody tr:hover {
+    background: rgba(0, 212, 255, 0.05);
+    transform: scale(1.01);
+  }
+
+  .edit-btn {
+    background: none;
+    border: none;
+    color: #00d4ff;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    padding: 8px;
+    border-radius: 50%;
+  }
+
+  .edit-btn:hover:not(:disabled) {
+    background: rgba(0, 212, 255, 0.1);
+    transform: scale(1.1);
+  }
+
+  .edit-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .checkbox-modern {
+    width: 18px;
+    height: 18px;
+    accent-color: #00d4ff;
+    cursor: pointer;
+  }
+
+  .pagination-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+    padding: 15px 0;
+  }
+
+  .no-data {
+    text-align: center;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 1.1rem;
+    padding: 40px;
+  }
+
+  /* Responsive Design */
+  @media (max-width: 1200px) {
+    .search-row {
+      gap: 12px;
+    }
+    
+    .search-group {
+      min-width: 180px;
+    }
+    
+    .search-group.button-group {
+      min-width: 110px;
+    }
+    
+    .modern-title {
+      font-size: 1.6rem;
+    }
+  }
+
+  @media (max-width: 992px) {
+    .search-row {
+      flex-direction: column;
+      gap: 15px;
+    }
+    
+    .search-group {
+      min-width: 100%;
+      flex: none;
+    }
+    
+    .search-group.button-group {
+      min-width: 100%;
+    }
+    
+    .btn-modern {
+      min-width: 100%;
+      padding: 12px 20px;
+    }
+    
+    .modern-title {
+      font-size: 1.6rem;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .modern-container {
+      padding: 15px;
+    }
+    
+    .modern-card {
+      padding: 20px;
+    }
+    
+    .modern-title {
+      font-size: 1.4rem;
+      margin-bottom: 20px;
+    }
+    
+    .search-section {
+      padding: 15px;
+    }
+    
+    .search-row {
+      gap: 12px;
+    }
+    
+    .btn-modern {
+      padding: 10px 16px;
+      font-size: 0.85rem;
+    }
+    
+    .table-container {
+      padding: 15px;
+    }
+    
+    .modern-table th,
+    .modern-table td {
+      padding: 8px 6px;
+      font-size: 0.8rem;
+    }
+    
+    .pagination-container {
+      flex-direction: column;
+      gap: 10px;
+    }
+    
+    .pagination-container .btn-modern {
+      min-width: 150px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .modern-card {
+      padding: 15px;
+      border-radius: 12px;
+    }
+    
+    .search-section {
+      padding: 12px;
+    }
+    
+    .search-row {
+      gap: 10px;
+    }
+    
+    .btn-modern {
+      padding: 8px 16px;
+      font-size: 0.8rem;
+      min-width: 100%;
+    }
+    
+    .table-container {
+      padding: 10px;
+    }
+    
+    .modern-table th,
+    .modern-table td {
+      padding: 6px 4px;
+      font-size: 0.75rem;
+    }
+    
+    .pagination-container .btn-modern {
+      min-width: 120px;
+      padding: 8px 12px;
+    }
+  }
+</style>
+
+<div class="modern-container">
+  <div class="modern-card">
+    <h1 class="modern-title">{{'Course List' | translate}}</h1>
+
+    <!-- Search Section -->
+    <div class="search-section">
+      <div class="search-row">
+        <div class="search-group">
+          <label class="search-label">{{'Course Name' | translate}}</label>
+          <select class="modern-select" name="courseName" [(ngModel)]="form.searchParams.id">
+            <option [ngValue]="" value="undefined">{{'Select Course Name' | translate}}</option>
+            <option *ngFor="let obj of form.preload.courseList" [value]="obj.key">{{obj.value}}</option>
+          </select>
+        </div>
+
+        <div class="search-group">
+          <label class="search-label">{{'Duration' | translate}}</label>
+          <input type="text" class="modern-input" [(ngModel)]="form.searchParams.duration"
+            placeholder="{{'Search Duration' | translate}}">
+        </div>
+
+        <div class="search-group button-group">
+          <button (click)="submit()" class="btn-modern btn-primary-modern">
+            <i class="fa fa-search"></i>
+            {{'Search' | translate}}
+          </button>
+        </div>
+
+        <div class="search-group button-group">
+          <button (click)="forward('/course')" type="button" class="btn-modern btn-success-modern">
+            <i class="fa fa-plus"></i>
+            {{'Add Course' | translate}}
+          </button>
+        </div>
+
+        <div class="search-group button-group">
+          <button (click)="deleteMany()" class="btn-modern btn-danger-modern">
+            <i class="fa fa-trash"></i>
+            {{'Delete' | translate}}
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Success/Error Messages -->
+    <div *ngIf="form.error" class="alert-modern alert-danger-modern">
+      <button type="button" class="close-btn" data-bs-dismiss="alert" aria-label="Close">×</button>
+      {{form.message}}
+    </div>
+
+    <div *ngIf="!form.error && form.message != null" class="alert-modern alert-success-modern">
+      <button type="button" class="close-btn" data-bs-dismiss="alert" aria-label="Close">×</button>
+      {{form.message}}
+    </div>
+
+    <!-- Data Table -->
+    <div class="table-container">
+      <table class="modern-table" *ngIf="form.list.length > 0">
+        <thead>
+          <tr>
+            <th>
+              <input type="checkbox" class="checkbox-modern" [(ngModel)]="isMasterSel" 
+                     name="list_name" value="h1" (change)="checkUncheckAll($event)" />
+            </th>
+            <th>{{'S.No' | translate}}</th>
+            <th>{{'Name' | translate}}</th>
+            <th>{{'Duration' | translate}}</th>
+            <th>{{'Description' | translate}}</th>
+            <th>{{'Edit' | translate}}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let m of form.list; let i = index">
+            <td>
+              <input type="checkbox" class="checkbox-modern" #checkboxes (change)="checklistUpdate()" 
+                     name="list_name" id="{{m.id}}" value="{{isMasterSel}}" />
+            </td>
+            <td>{{(form.pageNo*5)+i+ 1}}</td>
+            <td>{{m.courseName}}</td>
+            <td>{{m.duration}} Year{{m.duration > 1 ? 's' : ''}}</td>
+            <td>{{m.description}}</td>
+            <td>
+              <button class="edit-btn" (click)="forward('/course/' + m.id)" title="Edit Course">
+                <i class="fa fa-edit"></i>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- No Data Message -->
+      <div *ngIf="form.list.length === 0" class="no-data">
+        <i class="fa fa-book" style="font-size: 3rem; color: rgba(0, 212, 255, 0.3); margin-bottom: 15px;"></i>
+        <p>{{'No courses found' | translate}}</p>
+      </div>
+    </div>
+
+    <!-- Pagination -->
+    <div class="pagination-container" *ngIf="form.list.length > 0">
+      <button (click)="previous()" [disabled]="form.pageNo == 0" class="btn-modern btn-info-modern">
+        <i class="fa fa-chevron-left"></i>
+        {{'Previous' | translate}}
+      </button>
+
+      <span style="color: #ffffff; font-weight: 500;">
+        Page {{form.pageNo + 1}}
+      </span>
+
+      <button (click)="next()" [disabled]="nextList==0" type="button" class="btn-modern btn-info-modern">
+        {{'Next' | translate}}
+        <i class="fa fa-chevron-right"></i>
+      </button>
+    </div>
+
+    <!-- Back Button for No Data -->
+    <div class="pagination-container" *ngIf="form.list.length === 0">
+      <div></div>
+      <button class="btn-modern btn-warning-modern" [routerLink]="['/courselist']" (click)="exit()">
+        <i class="fa fa-arrow-left"></i>
+        {{'Back' | translate}}
+      </button>
+      <div></div>
+    </div>
+  </div>
+</div>
+<app-footer></app-footer>

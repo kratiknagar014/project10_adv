@@ -1,0 +1,343 @@
+<app-navbar></app-navbar>
+
+<style>
+  .modern-container {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #0a0e27 0%, #1a1d3a 25%, #2d1b69 50%, #1a1d3a 75%, #0a0e27 100%);
+    padding: 20px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+
+  .modern-card {
+    background: rgba(20, 25, 45, 0.95);
+    border: 2px solid #00d4ff;
+    border-radius: 16px;
+    box-shadow: 
+      0 0 25px rgba(0, 212, 255, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 30px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .modern-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, transparent 30%, rgba(0, 212, 255, 0.05) 50%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .modern-title {
+    color: #ffffff;
+    font-size: 1.8rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 30px;
+    text-shadow: 0 0 15px rgba(0, 212, 255, 0.5);
+    letter-spacing: 1px;
+  }
+
+  .form-group-modern {
+    margin-bottom: 20px;
+    position: relative;
+  }
+
+  .form-label-modern {
+    color: #ffffff;
+    font-weight: 500;
+    margin-bottom: 8px;
+    display: block;
+    font-size: 0.9rem;
+  }
+
+  .required-field::after {
+    content: ' *';
+    color: #ff4757;
+    font-weight: bold;
+  }
+
+  .input-group-modern {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  .input-icon {
+    position: absolute;
+    left: 12px;
+    color: #00d4ff;
+    z-index: 3;
+    font-size: 1rem;
+  }
+
+  .modern-input, .modern-select {
+    width: 100%;
+    padding: 12px 12px 12px 40px;
+    background: rgba(30, 35, 55, 0.8);
+    border: 2px solid rgba(0, 212, 255, 0.3);
+    border-radius: 8px;
+    color: #ffffff;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    outline: none;
+  }
+
+  .modern-input:focus, .modern-select:focus {
+    border-color: #00d4ff;
+    box-shadow: 0 0 15px rgba(0, 212, 255, 0.4);
+    background: rgba(30, 35, 55, 0.95);
+  }
+
+  .modern-input::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+  }
+
+  .modern-select option {
+    background: #1e2337;
+    color: #ffffff;
+  }
+
+  .error-message {
+    color: #ff4757;
+    font-size: 0.8rem;
+    margin-top: 5px;
+    display: block;
+  }
+
+  .alert-modern {
+    padding: 12px 16px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    font-weight: 500;
+    position: relative;
+    border: none;
+    font-size: 0.9rem;
+  }
+
+  .alert-success-modern {
+    background: rgba(46, 204, 113, 0.15);
+    color: #2ecc71;
+    border: 1px solid rgba(46, 204, 113, 0.3);
+  }
+
+  .alert-danger-modern {
+    background: rgba(255, 71, 87, 0.15);
+    color: #ff4757;
+    border: 1px solid rgba(255, 71, 87, 0.3);
+  }
+
+  .close-btn {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: inherit;
+    font-size: 1.1rem;
+    cursor: pointer;
+    opacity: 0.7;
+  }
+
+  .close-btn:hover {
+    opacity: 1;
+  }
+
+  .btn-modern {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 100px;
+    justify-content: center;
+  }
+
+  .btn-success-modern {
+    background: linear-gradient(135deg, #2ecc71, #27ae60);
+    color: white;
+    box-shadow: 0 3px 12px rgba(46, 204, 113, 0.3);
+  }
+
+  .btn-success-modern:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 16px rgba(46, 204, 113, 0.4);
+  }
+
+  .btn-warning-modern {
+    background: linear-gradient(135deg, #f39c12, #e67e22);
+    color: white;
+    box-shadow: 0 3px 12px rgba(243, 156, 18, 0.3);
+  }
+
+  .btn-warning-modern:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 16px rgba(243, 156, 18, 0.4);
+  }
+
+  .btn-modern:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none !important;
+  }
+
+  .btn-group-modern {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin-top: 30px;
+  }
+
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .modern-container {
+      padding: 15px;
+    }
+    
+    .modern-card {
+      padding: 20px;
+      margin: 10px;
+    }
+    
+    .modern-title {
+      font-size: 1.5rem;
+    }
+    
+    .btn-group-modern {
+      flex-direction: column;
+      gap: 10px;
+    }
+    
+    .btn-modern {
+      width: 100%;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .modern-card {
+      padding: 15px;
+      border-radius: 12px;
+    }
+    
+    .modern-title {
+      font-size: 1.3rem;
+      margin-bottom: 20px;
+    }
+    
+    .form-group-modern {
+      margin-bottom: 15px;
+    }
+  }
+</style>
+
+<div class="modern-container">
+  <div class="modern-card">
+    <form>
+      <h2 *ngIf="!(form.data.id>0)" class="modern-title">{{'Add College' | translate}}</h2>
+      <h2 *ngIf="form.data.id>0" class="modern-title">{{'Update College' | translate}}</h2>
+
+      <div *ngIf="form.error && form.message != null" class="alert-modern alert-danger-modern">
+        <button type="button" class="close-btn" data-bs-dismiss="alert" aria-label="Close">×</button>
+        {{form.message}}
+      </div>
+      <div *ngIf="!form.error && form.message != null" class="alert-modern alert-success-modern">
+        <button type="button" class="close-btn" data-bs-dismiss="alert" aria-label="Close">×</button>
+        {{form.message}}
+      </div>
+
+      <div class="form-group-modern">
+        <label class="form-label-modern">
+          {{'Name' | translate}}
+          <span class="required-field"></span>
+        </label>
+        <div class="input-group-modern">
+          <i class="fa fa-university input-icon"></i>
+          <input type="text" name="name" [(ngModel)]="form.data.name" class="modern-input"
+            placeholder="{{'Enter College Name' | translate}}">
+        </div>
+        <span class="error-message">{{form.inputerror.name}}</span>
+      </div>
+
+      <div class="form-group-modern">
+        <label class="form-label-modern">
+          {{'Address' | translate}}
+          <span class="required-field"></span>
+        </label>
+        <div class="input-group-modern">
+          <i class="fa fa-map-marker input-icon"></i>
+          <input type="text" name="addr" [(ngModel)]="form.data.address" class="modern-input"
+            placeholder="{{'Enter Address' | translate}}">
+        </div>
+        <span class="error-message">{{form.inputerror.address}}</span>
+      </div>
+
+      <div class="form-group-modern">
+        <label class="form-label-modern">
+          {{'City' | translate}}
+          <span class="required-field"></span>
+        </label>
+        <div class="input-group-modern">
+          <i class="fa fa-location-arrow input-icon"></i>
+          <input type="text" name="city" [(ngModel)]="form.data.city" class="modern-input"
+            placeholder="{{'Enter City' | translate}}">
+        </div>
+        <span class="error-message">{{form.inputerror.city}}</span>
+      </div>
+
+      <div class="form-group-modern">
+        <label class="form-label-modern">
+          {{'State' | translate}}
+          <span class="required-field"></span>
+        </label>
+        <div class="input-group-modern">
+          <i class="fa fa-map input-icon"></i>
+          <input type="text" name="state" [(ngModel)]="form.data.state" class="modern-input"
+            placeholder="{{'Enter State' | translate}}">
+        </div>
+        <span class="error-message">{{form.inputerror.state}}</span>
+      </div>
+
+      <div class="form-group-modern">
+        <label class="form-label-modern">
+          {{'Phone No.' | translate}}
+          <span class="required-field"></span>
+        </label>
+        <div class="input-group-modern">
+          <i class="fa fa-phone input-icon"></i>
+          <input type="text" name="phnNo" [(ngModel)]="form.data.phoneNo" class="modern-input"
+            placeholder="{{'Enter Phone No.' | translate}}">
+        </div>
+        <span class="error-message">{{form.inputerror.phoneNo}}</span>
+      </div>
+
+      <div class="btn-group-modern">
+        <button *ngIf="!(form.data.id>0)" (click)="submit()" [disabled]="!validate()" class="btn-modern btn-success-modern">
+          <i class="fa fa-save"></i>
+          {{'Save' | translate}}
+        </button>
+        <button *ngIf="form.data.id>0" (click)="submit()" class="btn-modern btn-success-modern">
+          <i class="fa fa-edit"></i>
+          {{'Update' | translate}}
+        </button>
+        <button (click)="forward('/collegelist')" type="button" class="btn-modern btn-warning-modern">
+          <i class="fa fa-list"></i>
+          {{'List' | translate}}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+<app-footer></app-footer>

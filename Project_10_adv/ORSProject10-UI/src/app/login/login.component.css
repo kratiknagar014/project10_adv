@@ -1,0 +1,247 @@
+.alertRedColor {
+  color: red;
+}
+
+
+.required-field::after {
+  content: "*";
+  color: red;
+}
+
+.successColor {
+  color: green;
+}
+
+.btn-space {
+  margin-right: 5px;
+}
+
+/* Modern login page layout */
+.login-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 80px);
+  background: linear-gradient(135deg, #0f1115 0%, #1a1c20 50%, #2c1f1a 100%);
+  padding: 10px;
+  margin-top: 10px;
+}
+
+.login-card {
+  position: relative;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #1b1f24 0%, #1a1c20 60%, #2c1f1a 100%);
+  border: 1px solid rgba(255, 107, 61, 0.28);
+  box-shadow:
+    0 14px 36px rgba(0, 0, 0, 0.42),
+    0 6px 16px rgba(0, 0, 0, 0.28),
+    0 0 0 2px rgba(255, 107, 61, 0.18),
+    0 0 48px rgba(255, 107, 61, 0.35);
+  width: 100%;
+  max-width: 360px;
+  margin: 0 auto;
+}
+
+/* Additional soft glow wrapper without expanding layout */
+.login-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  /* same size as card */
+  border-radius: inherit;
+  pointer-events: none;
+  box-shadow:
+    0 0 35px rgba(255, 107, 61, 0.45),
+    0 0 90px rgba(255, 107, 61, 0.25);
+}
+
+.login-card .card-body {
+  padding: 1rem;
+}
+
+/* Headline size tuned to avoid oversized look */
+.login-card h1 {
+  font-size: 1.75rem;
+  letter-spacing: 0.3px;
+}
+
+@media (max-width: 576px) {
+  .login-card .card-body {
+    padding: 20px;
+  }
+
+  .login-card h1 {
+    font-size: 1.45rem;
+  }
+}
+
+.input-group-text {
+  background: transparent;
+  border: none;
+  color: #adb5bd;
+}
+
+.form-control {
+  background: rgba(255, 255, 255, 0.1) !important;
+  border: 1px solid rgba(255, 107, 61, 0.3) !important;
+  border-radius: 8px !important;
+  color: #ffffff !important;
+  padding: 10px 14px !important;
+  font-size: 14px !important;
+  transition: all 0.3s ease !important;
+}
+
+.form-control:focus {
+  background: rgba(255, 255, 255, 0.15) !important;
+  border-color: #ff6b3d !important;
+  box-shadow: 0 0 0 0.2rem rgba(255, 107, 61, 0.25) !important;
+  color: #ffffff !important;
+}
+
+.form-control::placeholder {
+  color: rgba(255, 255, 255, 0.6) !important;
+}
+
+.auth-tabs {
+  margin: 10px 0 20px;
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+
+.auth-tab {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #e9ecef;
+  padding: 10px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background .2s ease, color .2s ease, border-color .2s ease;
+}
+
+.auth-tab.active {
+  background: #0d6efd;
+  border-color: #0d6efd;
+}
+
+.google-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  border-radius: 999px;
+  box-shadow: 0 6px 16px rgba(219, 68, 55, 0.35);
+  background: #db4437;
+  color: #fff;
+  border: none;
+  padding: 5px;
+  width: 100%;
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+.google-btn:hover {
+  background: #c23321;
+  color: #fff;
+}
+
+/* Button styling improvements */
+.btn {
+  padding: 8px 8px;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: none;
+  letter-spacing: 0.5px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.btn-success {
+  background: linear-gradient(135deg, #28a745, #20c997);
+  border: none;
+  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+}
+
+.btn-success:hover {
+  background: linear-gradient(135deg, #218838, #1e7e34);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(40, 167, 69, 0.4);
+}
+
+.btn-warning {
+  background: linear-gradient(135deg, #ffc107, #fd7e14);
+  border: none;
+  color: #212529;
+  box-shadow: 0 4px 12px rgba(255, 193, 7, 0.3);
+}
+
+.btn-warning:hover {
+  background: linear-gradient(135deg, #e0a800, #e8590c);
+  color: #212529;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(255, 193, 7, 0.4);
+}
+
+/* Alert message styling */
+.alert {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: none;
+  font-weight: 500;
+  margin-bottom: 10px;
+  position: relative;
+}
+
+.alert .btn-close {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  padding: 4px;
+  font-size: 12px;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  color: white;
+  opacity: 0.7;
+}
+
+.alert .btn-close:hover {
+  opacity: 1;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  color: white;
+}
+
+.alert-success {
+  background: linear-gradient(135deg, rgba(40, 167, 69, 0.15), rgba(32, 201, 151, 0.15));
+  border-left: 4px solid #28a745;
+  color: #ffffff;
+}
+
+.alert-danger {
+  background: linear-gradient(135deg, rgba(220, 53, 69, 0.15), rgba(255, 107, 61, 0.15));
+  border-left: 4px solid #dc3545;
+  color: #ffffff;
+}
+
+/* Text styling */
+.text-primary {
+  color: #ff6b3d !important;
+}
+
+.text-muted {
+  color: rgba(255, 255, 255, 0.6) !important;
+}
+
+/* Label styling */
+span b {
+  color: #ffffff;
+  font-weight: 600;
+}
