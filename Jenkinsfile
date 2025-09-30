@@ -202,35 +202,40 @@ pipeline {
                             // Verify Angular CLI is available
                             sh 'npx ng version || echo "Angular CLI not found, installing..."'
                             
-                            // Build with detailed output
-                            echo "🏗️ Starting Angular build..."
+                            // Build with timeout and simpler approach
+                            echo "🏗️ Starting Angular build (with timeout protection)..."
                             script {
                                 def buildSuccess = false
                                 
+                                // Skip verbose mode - it can cause hanging
+                                echo "🔄 Using npm run build (more reliable for Angular 7)..."
                                 try {
-                                    sh 'npx ng build --prod --verbose'
-                                    buildSuccess = true
-                                    echo "✅ Angular build completed successfully with --prod!"
-                                } catch (Exception e) {
-                                    echo "⚠️ Production build failed, trying alternative method..."
-                                    echo "Error: ${e.getMessage()}"
-                                    
-                                    // Try alternative build method
-                                    try {
-                                        echo "🔄 Trying npm run build..."
+                                    // Set timeout to prevent hanging
+                                    timeout(time: 10, unit: 'MINUTES') {
                                         sh 'npm run build'
+                                    }
+                                    buildSuccess = true
+                                    echo "✅ Angular build completed successfully!"
+                                } catch (Exception e) {
+                                    echo "⚠️ npm run build failed or timed out, trying basic ng build..."
+                                    
+                                    try {
+                                        timeout(time: 10, unit: 'MINUTES') {
+                                            // Use basic ng build without --prod and --verbose
+                                            sh 'npx ng build'
+                                        }
                                         buildSuccess = true
-                                        echo "✅ Angular build completed successfully with npm run build!"
+                                        echo "✅ Angular build completed with basic ng build!"
                                     } catch (Exception e2) {
-                                        echo "❌ Both build methods failed!"
-                                        echo "Error 1 (ng build --prod): ${e.getMessage()}"
-                                        echo "Error 2 (npm run build): ${e2.getMessage()}"
+                                        echo "❌ All build methods failed or timed out!"
+                                        echo "Error 1 (npm run build): ${e.getMessage()}"
+                                        echo "Error 2 (ng build): ${e2.getMessage()}"
                                         
                                         // Debug information
                                         echo "🔍 Debug Information:"
                                         sh 'ls -la dist/ || echo "No dist folder found"'
-                                        sh 'npm list @angular/cli || echo "Angular CLI not found in dependencies"'
-                                        sh 'npx ng version || echo "ng command failed"'
+                                        sh 'ps aux | grep node || echo "No node processes"'
+                                        sh 'free -h || echo "Memory info unavailable"'
                                         
                                         throw e2
                                     }
@@ -240,7 +245,7 @@ pipeline {
                                 if (buildSuccess) {
                                     echo "🔍 Verifying build output..."
                                     sh 'ls -la dist/'
-                                    sh 'ls -la dist/P10-UI/ || ls -la dist/*/ || echo "Build output in different structure"'
+                                    sh 'find dist/ -name "*.js" -o -name "*.html" -o -name "*.css" | head -10'
                                     echo "✅ Build verification completed"
                                 }
                             }
@@ -273,20 +278,24 @@ pipeline {
                             script {
                                 def buildSuccess = false
                                 
+                                echo "🔄 Using npm run build (more reliable for Angular 7)..."
                                 try {
-                                    bat 'npx ng build --prod'
+                                    timeout(time: 10, unit: 'MINUTES') {
+                                        bat 'npm run build'
+                                    }
                                     buildSuccess = true
-                                    echo "✅ Angular build completed successfully with --prod!"
+                                    echo "✅ Angular build completed successfully!"
                                 } catch (Exception e) {
-                                    echo "⚠️ Production build failed, trying alternative method..."
+                                    echo "⚠️ npm run build failed or timed out, trying basic ng build..."
                                     
                                     try {
-                                        echo "🔄 Trying npm run build..."
-                                        bat 'npm run build'
+                                        timeout(time: 10, unit: 'MINUTES') {
+                                            bat 'npx ng build'
+                                        }
                                         buildSuccess = true
-                                        echo "✅ Angular build completed successfully with npm run build!"
+                                        echo "✅ Angular build completed with basic ng build!"
                                     } catch (Exception e2) {
-                                        echo "❌ Both build methods failed!"
+                                        echo "❌ All build methods failed or timed out!"
                                         throw e2
                                     }
                                 }
