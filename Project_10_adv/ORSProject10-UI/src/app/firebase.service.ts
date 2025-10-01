@@ -103,8 +103,8 @@ export class FirebaseService {
       const tokenFromServer = result.token || firebaseToken;
       const userData = result.user || {};
 
-      // Keep compatibility with existing interceptor (expects `Bearer <token>`)
-      localStorage.setItem('token', 'Bearer ' + tokenFromServer);
+      // Store token without Bearer prefix (auth interceptor will add it)
+      localStorage.setItem('token', tokenFromServer);
 
       const loginIdToUse = userData.loginId || user.phoneNumber || user.uid || '';
       localStorage.setItem('loginId', loginIdToUse);
@@ -173,8 +173,7 @@ export class FirebaseService {
           // Store token locally
           localStorage.setItem('fcm-token', token);
           
-          // Send token to backend
-          await this.updateFCMToken(token);
+          // Note: Token will be sent to backend via login component
           return token;
         } else {
           console.error('❌ No token received');
@@ -250,19 +249,7 @@ export class FirebaseService {
     }
   }
 
-  // Update FCM token on backend
-  private async updateFCMToken(token: string): Promise<void> {
-    try {
-      const apiUrl = `${environment.apiUrl}/Notification/updateFcmToken`;
-      await this.http.post(apiUrl, null, {
-        params: { fcmToken: token }
-      }).toPromise();
-      
-      console.log('FCM token updated on backend');
-    } catch (error) {
-      console.error('Error updating FCM token:', error);
-    }
-  }
+  // FCM token backend update is now handled in login component
 
   // Logout
   async signOut() {
@@ -310,8 +297,8 @@ export class FirebaseService {
       const tokenFromServer = result.token || firebaseToken;
       const userData = result.user || {};
 
-      // Keep compatibility with existing interceptor (expects `Bearer <token>`)
-      localStorage.setItem('token', 'Bearer ' + tokenFromServer);
+      // Store token without Bearer prefix (auth interceptor will add it)
+      localStorage.setItem('token', tokenFromServer);
 
       const loginIdToUse = userData.loginId || user.email || user.phoneNumber || user.uid || '';
       localStorage.setItem('loginId', loginIdToUse);

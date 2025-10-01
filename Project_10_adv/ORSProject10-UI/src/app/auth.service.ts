@@ -20,11 +20,12 @@ export class AuthService implements HttpInterceptor {
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 
     if (localStorage.getItem('fname') && localStorage.getItem('token')) {
+      const token = this.http.getToken();
       req = req.clone({
         setHeaders: {
           "withCredentials": "true",
           "name": "rajat",
-          Authorization: this.http.getToken()
+          Authorization: token ? `Bearer ${token}` : ''
         }
       })
     }
@@ -49,9 +50,24 @@ export class AuthService implements HttpInterceptor {
           return this.handleTokenRefresh(req, next);
         }
         
-        // Handle 403 (Forbidden) errors - Direct logout
+        // Handle 403 (Forbidden) errors - Selective logout
         if (error.status === 403) {
-          console.log('403 Forbidden - Access denied');
+          console.log('403 Forbidden - Access denied for:', req.url);
+          
+          // Don't logout for notification endpoints - they might not be available for all roles
+          if (req.url.includes('/Notification/')) {
+            console.log('Notification endpoint access denied - continuing session');
+            return throwError('Notification access denied - insufficient permissions');
+          }
+          
+          // Don't logout for optional/non-critical endpoints
+          if (req.url.includes('/optional/') || req.url.includes('/analytics/')) {
+            console.log('Optional endpoint access denied - continuing session');
+            return throwError('Optional endpoint access denied');
+          }
+          
+          // Only logout for critical authentication endpoints
+          console.log('Critical endpoint access denied - logging out user');
           this.handleAuthError();
           return throwError('Access denied');
         }
@@ -126,6 +142,14 @@ export class AuthService implements HttpInterceptor {
   }
 
   private clearAuthData(): void {
+    console.log('🧹 CLEARING AUTH DATA - Stack trace:', new Error().stack);
+    console.log('🧹 Before clearing - localStorage contents:', {
+      token: localStorage.getItem('token') ? 'EXISTS' : 'NULL',
+      fname: localStorage.getItem('fname'),
+      userid: localStorage.getItem('userid'),
+      role: localStorage.getItem('role')
+    });
+    
     localStorage.removeItem('token');
     localStorage.removeItem('refreshToken');
     localStorage.removeItem('loginId');
@@ -134,8 +158,9 @@ export class AuthService implements HttpInterceptor {
     localStorage.removeItem('lname');
     localStorage.removeItem('userid');
     localStorage.removeItem('locale');
+    localStorage.removeItem('wasLoggedIn');
     
-    console.log('Authentication data cleared');
+    console.log('🧹 Authentication data cleared completely');
   }
 
 }

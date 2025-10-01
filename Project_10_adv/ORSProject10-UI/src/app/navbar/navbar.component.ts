@@ -123,25 +123,18 @@ export class NavbarComponent implements OnInit, OnDestroy {
     });
     this.subscriptions.push(notificationsSub);
 
-    // Load initial data
-    this.notificationService.loadUnreadCount();
-    this.notificationService.loadNotifications();
+    // Add small delay to ensure user session is fully established before loading notifications
+    setTimeout(() => {
+      // Load initial data with error handling
+      this.notificationService.loadUnreadCount();
+      this.notificationService.loadNotifications();
+    }, 1000);
 
-    // Request FCM permission and get token
-    this.requestNotificationPermission();
+    // Note: FCM token collection is handled in login component only
+    // No need to request permission again in navbar
   }
 
-  // Request notification permission
-  private async requestNotificationPermission() {
-    try {
-      const token = await this.firebaseService.requestNotificationPermission();
-      if (token) {
-        console.log('FCM token received:', token);
-      }
-    } catch (error) {
-      console.error('Error requesting notification permission:', error);
-    }
-  }
+  // FCM token collection is now handled centrally in login component
 
   // Mark notification as read
   markAsRead(notificationId: number) {

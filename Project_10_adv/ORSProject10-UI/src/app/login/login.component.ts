@@ -27,13 +27,15 @@ export class LoginComponent implements OnInit {
     loading: false
   };
 
+  // Login method toggles
+  showPhoneLogin = false;
+  showEmailLogin = true;
+
   // Alert dismissal functionality
   showAlert = true;
 
   inputerror = {};
   message = '';
-  showPhoneLogin = false;
-  showEmailLogin = true;
 
   // Method to dismiss alerts
   dismissAlert() {
@@ -325,8 +327,8 @@ export class LoginComponent implements OnInit {
 
       // Use Promise to handle the callback-based httpService
       return new Promise((resolve, reject) => {
-        // Fix endpoint URL - use direct URL instead of undefined BASE_URL
-        const apiUrl = 'https://project10.live/NotificationToken/updateToken';
+        // Use environment config for API URL
+        const apiUrl = `${this.serviceLocator.endpoints.SERVER_URL}/NotificationToken/updateToken`;
         console.log('🌐 API URL:', apiUrl);
         
         this.httpService.post(apiUrl, tokenData, (res: any) => {

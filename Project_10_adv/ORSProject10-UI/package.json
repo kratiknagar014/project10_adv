@@ -4,9 +4,10 @@
   "build": "ng build -prod –output-path META-INF/resources",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve --proxy-config proxy.conf.json",
-    "build": "ng build",
-    "build:prod": "ng build --prod --output-path=dist --aot --build-optimizer",
+    "start": "node --no-deprecation ./node_modules/@angular/cli/bin/ng serve --proxy-config proxy.conf.json",
+    "build": "node --no-deprecation ./node_modules/@angular/cli/bin/ng build",
+    "build:prod": "node --no-deprecation ./node_modules/@angular/cli/bin/ng build --prod --output-path=dist --aot --build-optimizer",
+    "build:jenkins": "node --no-deprecation --max-old-space-size=4096 ./node_modules/@angular/cli/bin/ng build --prod --output-path=dist --aot --build-optimizer",
     "test": "ng test",
     "test:ci": "ng test --watch=false --browsers=ChromeHeadless",
     "lint": "ng lint",

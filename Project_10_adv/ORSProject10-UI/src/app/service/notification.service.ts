@@ -114,7 +114,13 @@ export class NotificationService {
         }
       },
       (error) => {
-        console.error('Error loading unread count:', error);
+        if (error.status === 403) {
+          console.warn('Notification access denied - user may not have notification permissions');
+          // Set count to 0 for users without notification access
+          this.unreadCountSubject.next(0);
+        } else {
+          console.error('Error loading unread count:', error);
+        }
       }
     );
   }
@@ -128,7 +134,13 @@ export class NotificationService {
         }
       },
       (error) => {
-        console.error('Error loading notifications:', error);
+        if (error.status === 403) {
+          console.warn('Notification access denied - user may not have notification permissions');
+          // Set empty array for users without notification access
+          this.notificationsSubject.next([]);
+        } else {
+          console.error('Error loading notifications:', error);
+        }
       }
     );
   }

@@ -20,15 +20,15 @@ export class AdminNotificationComponent implements OnInit {
       body: '',
       fcmToken: '',
       type: 'test', // 'test', 'role-based', or 'broadcast'
-      roles: {
-        students: false,
-        faculty: false,
-        college: false
-      }
+      selectedRoles: [] // Dynamic role selection
     },
     inputerror: {},
     loading: false
   };
+
+  // Dynamic roles loaded from backend
+  public availableRoles = [];
+  public rolesLoading = false;
 
   constructor(
     private httpService: HttpServiceService,
@@ -39,6 +39,8 @@ export class AdminNotificationComponent implements OnInit {
   ngOnInit(): void {
     // Get current user's FCM token for testing
     this.getCurrentFCMToken();
+    // Load dynamic roles from backend
+    this.loadAvailableRoles();
   }
 
   async getCurrentFCMToken() {
@@ -135,6 +137,41 @@ export class AdminNotificationComponent implements OnInit {
     });
   }
 
+  loadAvailableRoles() {
+    this.rolesLoading = true;
+    const baseUrl = environment.apiUrl;
+    const url = `${baseUrl}/AdminNotification/preload`;
+
+    this.httpService.get(url, (res: any) => {
+      this.rolesLoading = false;
+      if (res.success && res.result.roleList) {
+        this.availableRoles = res.result.roleList;
+        console.log('✅ Loaded roles:', this.availableRoles);
+      } else {
+        console.error('❌ Failed to load roles:', res.result && res.result.message);
+        this.availableRoles = [];
+      }
+    });
+  }
+
+  onRoleSelectionChange(roleId: string, isSelected: any) {
+    if (isSelected) {
+      if (!this.form.data.selectedRoles.includes(roleId)) {
+        this.form.data.selectedRoles.push(roleId);
+      }
+    } else {
+      const index = this.form.data.selectedRoles.indexOf(roleId);
+      if (index > -1) {
+        this.form.data.selectedRoles.splice(index, 1);
+      }
+    }
+    console.log('Selected roles:', this.form.data.selectedRoles);
+  }
+
+  isRoleSelected(roleId: string): boolean {
+    return this.form.data.selectedRoles.includes(roleId);
+  }
+
   sendRoleBasedNotification() {
     if (!this.form.data.title || !this.form.data.body) {
       this.form.error = true;
@@ -142,13 +179,7 @@ export class AdminNotificationComponent implements OnInit {
       return;
     }
 
-    // Check if at least one role is selected using existing st_role table IDs
-    const selectedRoles = [];
-    if (this.form.data.roles.students) selectedRoles.push('role_2'); // Student roleId = 2
-    if (this.form.data.roles.faculty) selectedRoles.push('role_3');   // Faculty roleId = 3  
-    if (this.form.data.roles.college) selectedRoles.push('role_4');   // College roleId = 4
-
-    if (selectedRoles.length === 0) {
+    if (this.form.data.selectedRoles.length === 0) {
       this.form.error = true;
       this.form.message = 'Please select at least one role to send notification';
       return;
@@ -158,32 +189,23 @@ export class AdminNotificationComponent implements OnInit {
     this.form.error = false;
     this.form.message = null;
 
-    // Use environment-based URL
     const baseUrl = environment.apiUrl;
     const url = `${baseUrl}/AdminNotification/sendToRoles`;
     
     const requestData = {
       title: this.form.data.title,
       body: this.form.data.body,
-      targetRoles: selectedRoles,
-      roleNames: {
-        students: this.form.data.roles.students,
-        faculty: this.form.data.roles.faculty,
-        college: this.form.data.roles.college
-      }
+      selectedRoles: this.form.data.selectedRoles
     };
+
+    console.log('🚀 Sending role-based notification:', requestData);
 
     this.httpService.post(url, requestData, (res: any) => {
       this.form.loading = false;
       if (res.success) {
         this.form.error = false;
-        const roleCount = selectedRoles.length;
-        const roleNames = [];
-        if (this.form.data.roles.students) roleNames.push('Students');
-        if (this.form.data.roles.faculty) roleNames.push('Faculty');
-        if (this.form.data.roles.college) roleNames.push('College');
-        
-        this.form.message = `Role-based notification sent successfully to ${roleNames.join(', ')}!`;
+        const sentToRoles = res.result.sentToRoles || [];
+        this.form.message = `Role-based notification sent successfully to: ${sentToRoles.join(', ')}!`;
         this.resetForm();
       } else {
         this.form.error = true;
@@ -195,9 +217,7 @@ export class AdminNotificationComponent implements OnInit {
   resetForm() {
     this.form.data.title = '';
     this.form.data.body = '';
-    this.form.data.roles.students = false;
-    this.form.data.roles.faculty = false;
-    this.form.data.roles.college = false;
+    this.form.data.selectedRoles = [];
     // Keep FCM token for convenience
   }
 

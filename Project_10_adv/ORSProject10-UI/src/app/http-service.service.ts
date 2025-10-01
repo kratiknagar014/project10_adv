@@ -41,7 +41,11 @@ export class HttpServiceService {
   isLogout() {
     let JSESSIONID = localStorage.getItem('fname');
     let token = localStorage.getItem('token');
-    console.log("isLogout check...");
+    console.log("isLogout check...", { 
+      fname: JSESSIONID, 
+      token: token ? token.substring(0, 20) + '...' : null,
+      currentUrl: this.router.url 
+    });
 
     // Don't check session for public pages or first visit
     const publicPages = ["/login", "/Auth", "/logout", "/forgotpassword", "/signup", "/login/true", "/"];
@@ -55,12 +59,18 @@ export class HttpServiceService {
     if ((JSESSIONID == "null" || JSESSIONID == null) && (token == "null" || token == null)) {
       // Only show session expired if user was previously logged in
       if (localStorage.getItem('wasLoggedIn') === 'true') {
+        console.log("🚨 SESSION EXPIRED DETECTED:");
+        console.log("- fname:", JSESSIONID);
+        console.log("- token:", token);
+        console.log("- wasLoggedIn:", localStorage.getItem('wasLoggedIn'));
+        console.log("- Current URL:", this.router.url);
+        console.log("- Stack trace:", new Error().stack);
+        
         this.form.message = "Your Session has been Expired! Please Re-Login";
         this.form.error = true;
         this.userparams.url = this.router.url;
         localStorage.removeItem('wasLoggedIn'); // Clear flag to prevent repeated alerts
         this.router.navigateByUrl("/login");
-        console.log("Session expired, redirecting to login");
         return true;
       }
       return false; // Don't show alert on first visit
@@ -124,6 +134,7 @@ export class HttpServiceService {
       localStorage.removeItem('fname');
       localStorage.removeItem('lname');
       localStorage.removeItem('userid');
+      localStorage.removeItem('wasLoggedIn'); // Clear login flag
       console.log('Authentication data cleared');
       
       // Show error message

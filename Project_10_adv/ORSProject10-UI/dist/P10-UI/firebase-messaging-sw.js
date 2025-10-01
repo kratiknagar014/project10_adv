@@ -46,7 +46,7 @@ messaging.onBackgroundMessage((payload) => {
     }
   };
 
-  // Show the notification
+  // Show the notification..
   self.registration.showNotification(notificationTitle, notificationOptions);
 });
 

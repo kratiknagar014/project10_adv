@@ -4,7 +4,7 @@ pipeline {
     tools {
         jdk 'JDK11'        // Jenkins me configured JDK11 ka name
         maven 'Maven3'     // Jenkins me configured Maven
-        nodejs 'Node16'    // Jenkins me configured NodeJS
+        nodejs 'Node12'    // Jenkins me configured NodeJS
     }
 
     environment {
@@ -18,6 +18,12 @@ pipeline {
         NPM_CACHE = '/var/lib/jenkins/.npm'
         NODE_MODULES_CACHE = '/var/lib/jenkins/cache/node_modules'
         JENKINS_CACHE_DIR = '/var/lib/jenkins/cache'
+        
+        // Node.js environment variables to suppress deprecation warnings
+        NODE_NO_WARNINGS = '1'
+        NODE_OPTIONS = '--no-deprecation --no-warnings --max-old-space-size=4096'
+        NPM_CONFIG_LOGLEVEL = 'error'
+        CI = 'true'
     }
 
     stages {
@@ -208,11 +214,11 @@ pipeline {
                                 def buildSuccess = false
                                 
                                 // Skip verbose mode - it can cause hanging
-                                echo "🔄 Using npm run build (more reliable for Angular 7)..."
+                                echo "🔄 Using npm run build:jenkins (optimized for Jenkins)..."
                                 try {
                                     // Set timeout to prevent hanging
-                                    timeout(time: 10, unit: 'MINUTES') {
-                                        sh 'npm run build'
+                                    timeout(time: 15, unit: 'MINUTES') {
+                                        sh 'npm run build:jenkins'
                                     }
                                     buildSuccess = true
                                     echo "✅ Angular build completed successfully!"
@@ -278,10 +284,10 @@ pipeline {
                             script {
                                 def buildSuccess = false
                                 
-                                echo "🔄 Using npm run build (more reliable for Angular 7)..."
+                                echo "🔄 Using npm run build:jenkins (optimized for Jenkins)..."
                                 try {
-                                    timeout(time: 10, unit: 'MINUTES') {
-                                        bat 'npm run build'
+                                    timeout(time: 15, unit: 'MINUTES') {
+                                        bat 'npm run build:jenkins'
                                     }
                                     buildSuccess = true
                                     echo "✅ Angular build completed successfully!"
