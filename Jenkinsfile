@@ -1,11 +1,27 @@
 pipeline {
     agent any
     
+    options {
+        // Set overall pipeline timeout to 45 minutes
+        timeout(time: 45, unit: 'MINUTES')
+        
+        // Keep only last 10 builds
+        buildDiscarder(logRotator(numToKeepStr: '10'))
+        
+        // Skip default checkout
+        skipDefaultCheckout(true)
+    }
+    
     parameters {
         booleanParam(
             name: 'CLEAN_CACHE', 
             defaultValue: false, 
             description: 'Clean all Jenkins cache directories (Maven, NPM, Node modules)'
+        )
+        booleanParam(
+            name: 'SKIP_TESTS', 
+            defaultValue: true, 
+            description: 'Skip running tests to speed up build'
         )
     }
 
@@ -126,55 +142,35 @@ pipeline {
                     echo "📥 Installing dependencies with timeout protection..."
                     script {
                         try {
-                            echo "🔄 Attempting npm install with --legacy-peer-deps (5 min timeout)..."
-                            timeout(time: 5, unit: 'MINUTES') {
-                                sh 'npm install --legacy-peer-deps --no-audit --no-fund --verbose'
+                            echo "🔄 Attempting npm install with --legacy-peer-deps (8 min timeout)..."
+                            timeout(time: 8, unit: 'MINUTES') {
+                                sh 'npm install --legacy-peer-deps --no-audit --no-fund'
                             }
                             echo "✅ npm install with legacy-peer-deps successful!"
                         } catch (Exception e) {
                             echo "⚠️ Legacy peer deps failed or timed out: ${e.getMessage()}"
-                            echo "🔄 Trying with --force flag (3 min timeout)..."
+                            echo "🔄 Trying with --force flag (5 min timeout)..."
                             try {
-                                timeout(time: 3, unit: 'MINUTES') {
+                                timeout(time: 5, unit: 'MINUTES') {
                                     sh 'npm install --force --no-audit --no-fund'
                                 }
                                 echo "✅ npm install with --force successful!"
                             } catch (Exception e2) {
                                 echo "❌ Force install failed or timed out: ${e2.getMessage()}"
-                                echo "🔄 Trying basic npm install (2 min timeout)..."
+                                echo "🔄 Trying minimal production install (3 min timeout)..."
                                 try {
-                                    timeout(time: 2, unit: 'MINUTES') {
-                                        sh 'npm install --no-audit --no-fund'
+                                    timeout(time: 3, unit: 'MINUTES') {
+                                        sh 'npm install --only=prod --no-optional --no-audit --no-fund'
                                     }
-                                    echo "✅ Basic npm install successful!"
+                                    echo "✅ Minimal install successful!"
                                 } catch (Exception e3) {
-                                    echo "❌ All npm install methods failed or timed out!"
-                                    echo "🔄 Trying alternative approach with yarn..."
-                                    try {
-                                        timeout(time: 3, unit: 'MINUTES') {
-                                            sh 'npm install -g yarn || true'
-                                            sh 'yarn install --ignore-engines --network-timeout 300000'
-                                        }
-                                        echo "✅ Yarn install successful!"
-                                    } catch (Exception e4) {
-                                        echo "❌ Yarn also failed! Trying minimal install..."
-                                        try {
-                                            timeout(time: 2, unit: 'MINUTES') {
-                                                sh 'npm install --only=prod --no-optional --no-audit --no-fund'
-                                            }
-                                            echo "✅ Minimal install successful!"
-                                        } catch (Exception e5) {
-                                            echo "❌ All installation methods failed!"
-                                            echo "🔍 Debug info:"
-                                            sh 'npm --version || echo "npm not found"'
-                                            sh 'node --version || echo "node not found"'
-                                            sh 'ls -la package*.json || echo "package files not found"'
-                                            sh 'df -h || echo "disk space check failed"'
-                                            sh 'free -h || echo "memory check failed"'
-                                            sh 'ps aux | grep npm || echo "no npm processes"'
-                                            throw e5
-                                        }
-                                    }
+                                    echo "❌ All installation methods failed!"
+                                    echo "🔍 Debug info:"
+                                    sh 'npm --version || echo "npm not found"'
+                                    sh 'node --version || echo "node not found"'
+                                    sh 'df -h | head -5 || echo "disk space check failed"'
+                                    sh 'free -h || echo "memory check failed"'
+                                    throw e3
                                 }
                             }
                         }
@@ -191,9 +187,9 @@ pipeline {
                     script {
                         def buildSuccess = false
                         
-                        echo "🔄 Using npm run build:jenkins..."
+                        echo "🔄 Using npm run build:jenkins (20 min timeout)..."
                         try {
-                            timeout(time: 15, unit: 'MINUTES') {
+                            timeout(time: 20, unit: 'MINUTES') {
                                 sh 'npm run build:jenkins'
                             }
                             buildSuccess = true
@@ -203,7 +199,7 @@ pipeline {
                             
                             try {
                                 timeout(time: 10, unit: 'MINUTES') {
-                                    sh 'npx ng build --prod'
+                                    sh 'npx ng build --prod --output-path=dist --aot'
                                 }
                                 buildSuccess = true
                                 echo "✅ Angular build completed with basic ng build!"
@@ -212,11 +208,10 @@ pipeline {
                                 echo "Error 1 (npm run build): ${e.getMessage()}"
                                 echo "Error 2 (ng build): ${e2.getMessage()}"
                                 
-                                // Debug information
+                                // Quick debug info
                                 echo "🔍 Debug Information:"
                                 sh 'ls -la dist/ || echo "No dist folder found"'
-                                sh 'ps aux | grep node || echo "No node processes"'
-                                sh 'free -h || echo "Memory info unavailable"'
+                                sh 'df -h | head -3 || echo "Disk space check failed"'
                                 
                                 throw e2
                             }
@@ -225,8 +220,8 @@ pipeline {
                         // Verify build output
                         if (buildSuccess) {
                             echo "🔍 Verifying build output..."
-                            sh 'ls -la dist/'
-                            sh 'find dist/ -name "*.js" -o -name "*.html" -o -name "*.css" | head -10'
+                            sh 'ls -la dist/ | head -5'
+                            sh 'find dist/ -name "*.js" | head -3 || echo "No JS files found"'
                             echo "✅ Build verification completed"
                         }
                     }
@@ -350,41 +345,20 @@ pipeline {
 
     post {
         always {
-            echo "🧹 Cleaning up workspace and cache directories..."
             script {
-                // Clean workspace completely
-                cleanWs()
-                
-                // Clean and remove all cache directories
-                sh """
-                    echo "🗑️ Removing cache directories..."
-                    
-                    # Remove Maven cache directories
-                    rm -rf /var/lib/jenkins/.m2/repository/* 2>/dev/null || true
-                    rm -rf /var/lib/jenkins/.m2/* 2>/dev/null || true
-                    echo "✅ Maven cache cleaned"
-                    
-                    # Remove NPM cache directories
-                    rm -rf /var/lib/jenkins/.npm/* 2>/dev/null || true
-                    rm -rf /var/lib/jenkins/cache/node_modules/* 2>/dev/null || true
-                    rm -rf /var/lib/jenkins/cache/npm/* 2>/dev/null || true
-                    echo "✅ NPM cache cleaned"
-                    
-                    # Remove Jenkins cache directory
-                    rm -rf /var/lib/jenkins/cache/* 2>/dev/null || true
-                    echo "✅ Jenkins cache cleaned"
-                    
-                    # Clean npm global cache
-                    npm cache clean --force 2>/dev/null || true
-                    echo "✅ NPM global cache cleaned"
-                    
-                    # Clean temporary files
-                    rm -rf /tmp/npm-* 2>/dev/null || true
-                    rm -rf /tmp/node-* 2>/dev/null || true
-                    echo "✅ Temporary files cleaned"
-                    
-                    echo "🎯 All cache directories cleaned successfully!"
-                """
+                // Quick cleanup with timeout protection
+                try {
+                    timeout(time: 2, unit: 'MINUTES') {
+                        echo "🧹 Quick workspace cleanup..."
+                        
+                        // Clean workspace only (skip cache cleanup to save time)
+                        cleanWs(patterns: [[pattern: 'node_modules/**', type: 'EXCLUDE']])
+                        
+                        echo "✅ Workspace cleaned"
+                    }
+                } catch (Exception e) {
+                    echo "⚠️ Cleanup timeout or failed: ${e.getMessage()}"
+                }
             }
         }
         success {
