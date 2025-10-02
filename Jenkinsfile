@@ -77,6 +77,31 @@ pipeline {
         }
 
 
+        stage('Kill Hanging Processes') {
+            steps {
+                echo "🔪 Killing any hanging npm/node processes..."
+                script {
+                    try {
+                        sh '''
+                            # Kill any hanging npm processes
+                            pkill -f "npm install" || true
+                            pkill -f "npm" || true
+                            pkill -f "node" || true
+                            
+                            # Wait a moment
+                            sleep 2
+                            
+                            # Check if any processes are still running
+                            ps aux | grep -E "(npm|node)" | grep -v grep || echo "No npm/node processes found"
+                        '''
+                        echo "✅ Process cleanup completed"
+                    } catch (Exception e) {
+                        echo "⚠️ Process cleanup failed: ${e.getMessage()}"
+                    }
+                }
+            }
+        }
+
         stage('Build Frontend') {
             steps {
                 echo "🎨 Building Angular frontend..."
@@ -86,21 +111,71 @@ pipeline {
                     sh 'ls -la'
                     sh 'cat package.json | head -20'
                     
-                    // Clean install dependencies
-                    echo "📥 Installing dependencies..."
+                    // Pre-install cleanup and setup
+                    echo "🧹 Pre-install cleanup..."
+                    sh 'rm -rf node_modules package-lock.json || true'
+                    sh 'npm cache clean --force || true'
+                    
+                    // Set npm configurations for Angular 7
+                    echo "⚙️ Configuring npm for Angular 7..."
+                    sh 'npm config set legacy-peer-deps true'
+                    sh 'npm config set fund false'
+                    sh 'npm config set audit false'
+                    
+                    // Clean install dependencies with timeout
+                    echo "📥 Installing dependencies with timeout protection..."
                     script {
                         try {
-                            echo "🔄 Attempting npm install with --legacy-peer-deps..."
-                            sh 'npm install --legacy-peer-deps --no-audit --no-fund'
+                            echo "🔄 Attempting npm install with --legacy-peer-deps (5 min timeout)..."
+                            timeout(time: 5, unit: 'MINUTES') {
+                                sh 'npm install --legacy-peer-deps --no-audit --no-fund --verbose'
+                            }
+                            echo "✅ npm install with legacy-peer-deps successful!"
                         } catch (Exception e) {
-                            echo "⚠️ Legacy peer deps failed: ${e.getMessage()}"
-                            echo "🔄 Trying with --force flag..."
+                            echo "⚠️ Legacy peer deps failed or timed out: ${e.getMessage()}"
+                            echo "🔄 Trying with --force flag (3 min timeout)..."
                             try {
-                                sh 'npm install --force --no-audit --no-fund'
+                                timeout(time: 3, unit: 'MINUTES') {
+                                    sh 'npm install --force --no-audit --no-fund'
+                                }
+                                echo "✅ npm install with --force successful!"
                             } catch (Exception e2) {
-                                echo "❌ Both install methods failed!"
-                                echo "🔄 Trying basic npm install..."
-                                sh 'npm install --no-audit --no-fund'
+                                echo "❌ Force install failed or timed out: ${e2.getMessage()}"
+                                echo "🔄 Trying basic npm install (2 min timeout)..."
+                                try {
+                                    timeout(time: 2, unit: 'MINUTES') {
+                                        sh 'npm install --no-audit --no-fund'
+                                    }
+                                    echo "✅ Basic npm install successful!"
+                                } catch (Exception e3) {
+                                    echo "❌ All npm install methods failed or timed out!"
+                                    echo "🔄 Trying alternative approach with yarn..."
+                                    try {
+                                        timeout(time: 3, unit: 'MINUTES') {
+                                            sh 'npm install -g yarn || true'
+                                            sh 'yarn install --ignore-engines --network-timeout 300000'
+                                        }
+                                        echo "✅ Yarn install successful!"
+                                    } catch (Exception e4) {
+                                        echo "❌ Yarn also failed! Trying minimal install..."
+                                        try {
+                                            timeout(time: 2, unit: 'MINUTES') {
+                                                sh 'npm install --only=prod --no-optional --no-audit --no-fund'
+                                            }
+                                            echo "✅ Minimal install successful!"
+                                        } catch (Exception e5) {
+                                            echo "❌ All installation methods failed!"
+                                            echo "🔍 Debug info:"
+                                            sh 'npm --version || echo "npm not found"'
+                                            sh 'node --version || echo "node not found"'
+                                            sh 'ls -la package*.json || echo "package files not found"'
+                                            sh 'df -h || echo "disk space check failed"'
+                                            sh 'free -h || echo "memory check failed"'
+                                            sh 'ps aux | grep npm || echo "no npm processes"'
+                                            throw e5
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
