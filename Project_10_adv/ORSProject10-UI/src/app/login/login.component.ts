@@ -27,15 +27,13 @@ export class LoginComponent implements OnInit {
     loading: false
   };
 
-  // Login method toggles
-  showPhoneLogin = false;
-  showEmailLogin = true;
-
   // Alert dismissal functionality
   showAlert = true;
 
   inputerror = {};
   message = '';
+  showPhoneLogin = false;
+  showEmailLogin = true;
 
   // Method to dismiss alerts
   dismissAlert() {

@@ -326,26 +326,26 @@
     <!-- Role Selection (only for role-based) -->
     <div *ngIf="form.data.type === 'role-based'" class="form-group">
       <label class="form-label">Select Target Roles</label>
-      <div *ngIf="rolesLoading" style="text-align: center; padding: 20px; color: rgba(255, 255, 255, 0.7);">
-        <span class="loading-spinner"></span>
-        Loading available roles...
-      </div>
-      <div *ngIf="!rolesLoading && availableRoles.length === 0" style="text-align: center; padding: 20px; color: rgba(255, 255, 255, 0.7);">
-        No roles available. Please check backend configuration.
-      </div>
-      <div *ngIf="!rolesLoading && availableRoles.length > 0" class="role-selection">
-        <div class="role-option" *ngFor="let role of availableRoles">
-          <input 
-            type="checkbox" 
-            [id]="'role-' + role.key" 
-            [checked]="isRoleSelected(role.key)"
-            (change)="onRoleSelectionChange(role.key, $event.target['checked'])"
-            class="role-checkbox">
-          <label [for]="'role-' + role.key" class="role-label">
-            {{ role.value }} (ID: {{ role.key }})
-            <small style="display: block; margin-top: 3px; opacity: 0.7;">
-              All users with roleId = {{ role.key }} from ST_USER table
-            </small>
+      <div class="role-selection">
+        <div class="role-option">
+          <input type="checkbox" id="students" [(ngModel)]="form.data.roles.students" class="role-checkbox">
+          <label for="students" class="role-label">
+            🎓 Students (ST_ROLE.ID = 2)
+            <small style="display: block; margin-top: 3px; opacity: 0.7;">All users with roleId = 2 from ST_USER table</small>
+          </label>
+        </div>
+        <div class="role-option">
+          <input type="checkbox" id="faculty" [(ngModel)]="form.data.roles.faculty" class="role-checkbox">
+          <label for="faculty" class="role-label">
+            👨‍🏫 Faculty (ST_ROLE.ID = 3)
+            <small style="display: block; margin-top: 3px; opacity: 0.7;">All users with roleId = 3 from ST_USER table</small>
+          </label>
+        </div>
+        <div class="role-option">
+          <input type="checkbox" id="college" [(ngModel)]="form.data.roles.college" class="role-checkbox">
+          <label for="college" class="role-label">
+            🏫 College (ST_ROLE.ID = 4)
+            <small style="display: block; margin-top: 3px; opacity: 0.7;">All users with roleId = 4 from ST_USER table</small>
           </label>
         </div>
       </div>
@@ -394,7 +394,7 @@
           class="btn btn-primary"
           [disabled]="form.loading || !notificationForm.form.valid">
           <span *ngIf="form.loading" class="loading-spinner"></span>
-          {{ form.loading ? 'Sending...' : (form.data.type === 'test' ? '🧪 Send Test' : (form.data.type === 'role-based' ? '👥 Send to Roles' : '📡 Send Broadcast')) }}
+          {{ form.loading ? 'Sending...' : (form.data.type === 'test' ? '🧪 Send Test' : '📡 Send Broadcast') }}
         </button>
         
         <button 
@@ -412,11 +412,9 @@
       <h3 style="color: #00d4ff; margin-bottom: 15px; font-size: 1.1rem;">📋 Instructions:</h3>
       <ul style="color: rgba(255, 255, 255, 0.8); line-height: 1.6; margin: 0; padding-left: 20px;">
         <li><strong>Test Notification:</strong> Sends to your current device using FCM token</li>
-        <li><strong>Role-Based:</strong> Sends to users with selected roles via FCM topics (role_1, role_2, etc.)</li>
         <li><strong>Broadcast:</strong> Sends to all users subscribed to "all_users" topic</li>
-        <li>Roles are loaded dynamically from ST_ROLE table</li>
-        <li>Users must be subscribed to role topics to receive role-based notifications</li>
         <li>Make sure Firebase Cloud Messaging is properly configured</li>
+        <li>Users need to have notification permission enabled</li>
       </ul>
     </div>
   </div>
